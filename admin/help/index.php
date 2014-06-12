@@ -10,7 +10,7 @@ if (\Tr8n\Config::instance()->isEnabled()) {
 
     <script>
         window.setTimeout(function() {
-            location.href = "http://wiki.tr8nhub.com/index.php?title=Wordpress_Plugin";
+            location.href = "http://wiki.tr8nhub.com/index.php?title=Tr8n_WordPress_Plugin";
         }, 2000);
     </script>
 <?php

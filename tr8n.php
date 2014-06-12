@@ -13,11 +13,11 @@
 
 /*
  * Tr8n v0.1.0
- * http://tr8nhub.com/
+ * http://TranslationExchange.com/
  *
- * Copyright 2010-2013, Michael Berkovich, Tr8nHub
- * Licensed under the GPL Version 2 or higher.
- * http://tr8nhub.com/license
+ * Copyright 2014, Michael Berkovich, TranslationExchange
+ * Licensed under the MIT.
+ * http://TranslationExchange.com/license
  *
  */
 
@@ -25,9 +25,7 @@ add_option('tr8n_version', '0.1.0');
 
 require_once(dirname(__FILE__).'/../../../vendor/tr8n/tr8n-client-sdk/library/Tr8n.php');
 
-
 // tr8n_init_client_sdk('https://sandbox.tr8nhub.com', 'df8a6877f0918aeb5', '5c07f42936f816eda');
-
 
 tr8n_init_client_sdk(get_option('tr8n_server_url'), get_option('tr8n_application_key'), get_option('tr8n_application_secret'));
 

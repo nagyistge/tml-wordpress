@@ -2,13 +2,13 @@
     "name": "tr8n/tr8n-wordpress-plugin",
     "description": "Tr8n WordPress Plugin",
     "keywords": ["wordpress", "plugin", "tr8n", "translation", "i18n", "internationalization", "t9n"],
-    "homepage": "http://tr8nhub.com",
+    "homepage": "https://tr8nhub.com",
     "license": "MIT",
     "authors": [
         {
             "name": "Michael Berkovich",
             "email": "michael@tr8nhub.com",
-            "homepage": "http://tr8nhub.com"
+            "homepage": "https://tr8nhub.com"
         }
     ],
     "type": "wordpress-plugin",
