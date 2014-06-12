@@ -8,7 +8,7 @@ $submit_field_name = 'tr8n_submit_hidden';
 $cache_field_name = 'tr8n_update_cache_hidden';
 
 $application_fields = array(
-    'tr8n_server_url' => array("title" => __('Server Url:'), "value" => get_option('tr8n_server_url'), "default" => "http://sandbox.tr8nhub.com"),
+    'tr8n_server_url' => array("title" => __('Server Url:'), "value" => get_option('tr8n_server_url'), "default" => "https://translationexchange.com"),
     'tr8n_application_key' => array("title" => __('Application Key:'), "value" => get_option('tr8n_application_key'), "default" => ""),
     'tr8n_application_secret' => array("title" => __('Secret:'), "value" => get_option('tr8n_application_secret'), "default" => ""),
 );

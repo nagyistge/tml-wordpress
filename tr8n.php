@@ -3,9 +3,9 @@
   Plugin Name: Tr8n
   Plugin URI: http://tr8nhub.com/
   Description: Crowdsourced translation service
-  Author: Tr8nHub
+  Author: TranslationExchange
   Version: 0.1.0
-  Author URI: http://tr8nhub.com/
+  Author URI: https://translationexchange.com/
   License: GPL (http://www.gnu.org/licenses/gpl.txt)
   Text Domain: tr8nhub
   Domain Path: /tr8n
@@ -23,15 +23,19 @@
 
 add_option('tr8n_version', '0.1.0');
 
-require_once('../../../vendor/tr8n_php_clientsdk/library/Tr8n.php');
+require_once(dirname(__FILE__).'/../../../vendor/tr8n/tr8n-client-sdk/library/Tr8n.php');
+
+
+// tr8n_init_client_sdk('https://sandbox.tr8nhub.com', 'df8a6877f0918aeb5', '5c07f42936f816eda');
+
 
 tr8n_init_client_sdk(get_option('tr8n_server_url'), get_option('tr8n_application_key'), get_option('tr8n_application_secret'));
+
 
 if (\Tr8n\Config::instance()->isEnabled()) {
     apply_filters('debug', 'Tr8n Initialized');
 }
 
-// tr8n_init_client_sdk('http://sandbox.tr8nhub.com', 'df8a6877f0918aeb5', '5c07f42936f816eda');
 
 //class Tr8nWordpressConfig extends \Tr8n\Config {
 //    public function isCachingEnabled() {
@@ -150,7 +154,13 @@ function tr8n_title($title, $id) {
     return do_shortcode($title);
 }
 add_filter('the_title', 'tr8n_title', 10, 2);
+add_filter('widget_title', 'tr8n_title', 10, 2);
 add_filter('wp_title', 'tr8n_title', 10, 2);
+
+// function tr8n_wp_title_filter($title, $id) {
+//     return do_shortcode($title);
+// }
+// add_filter('wp_title', 'tr8n_wp_title_filter', 10, 2);
 
 function tr8n_the_content_filter($content) {
     if (get_option('tr8n_translate_html') == 'true') {
@@ -158,10 +168,15 @@ function tr8n_the_content_filter($content) {
             return $content;
         return trh($content);
     }
-//    \Tr8n\Logger::instance()->debug($content);
+    \Tr8n\Logger::instance()->debug($content);
     return $content;
 }
 add_filter('the_content', 'tr8n_the_content_filter');
+
+function tr8n_widget_text_filter($content) {
+    return do_shortcode($content);
+}
+add_filter('widget_text', 'tr8n_widget_text_filter');
 
 function tr8n_the_excerpt_filter($content) {
 //    \Tr8n\Logger::instance()->debug($content);
