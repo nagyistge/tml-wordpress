@@ -8,8 +8,7 @@ Tml Plugin For Wordpress
 This plugin uses Tml PHP Client SDK to enable inline translations of WordPress posts and page contents.
 
 [![Latest Stable Version](https://poser.pugx.org/translationexchange/tml-wordpress/v/stable.png)](https://packagist.org/packages/translationexchange/tml-wordpress)
-[![Dependency Status](https://www.versioneye.com/user/projects/52e4b4a3ec1375b57600000c/badge.png)](https://www.versioneye.com/user/projects/52e4b4a3ec1375b57600000c)
-
+[![Dependency Status](https://www.versioneye.com/user/projects/54dd4a9dc1bbbd5f8200053d/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54dd4a9dc1bbbd5f8200053d)
 
 Installation
 ==================

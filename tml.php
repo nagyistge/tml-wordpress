@@ -22,10 +22,10 @@
  */
 add_option('tml_version', '0.1.0');
 
-require_once(dirname(__FILE__).'/../tml-php/library/tml.php');
+// require_once(dirname(__FILE__).'/../tml-php/library/tml.php');
+// require_once( dirname( __FILE__ ) . '/sdk/library/Tml.php' );
 
-//require_once(dirname(__FILE__).'/../../../vendor/translationexchange/tml/library/tml.php');
-//require_once( dirname( __FILE__ ) . '/sdk/library/Tml.php' );
+require_once(dirname(__FILE__).'/../../../vendor/translationexchange/tml/library/tml.php');
 
 use tml\Config;
 use tml\Logger;
