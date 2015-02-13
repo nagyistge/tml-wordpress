@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.github.com/tml/tml/master/doc/screenshots/tmllogo.png">
+  <img src="https://avatars0.githubusercontent.com/u/1316274?v=3&s=200">
 </p>
 
 Tml Plugin For Wordpress
@@ -7,7 +7,7 @@ Tml Plugin For Wordpress
 
 This plugin uses Tml PHP Client SDK to enable inline translations of WordPress posts and page contents.
 
-[![Latest Stable Version](https://poser.pugx.org/tml/tml-wordpress-plugin/v/stable.png)](https://packagist.org/packages/tml/tml-wordpress-plugin)
+[![Latest Stable Version](https://poser.pugx.org/translationexchange/tml-wordpress/v/stable.png)](https://packagist.org/packages/translationexchange/tml-wordpress)
 [![Dependency Status](https://www.versioneye.com/user/projects/52e4b4a3ec1375b57600000c/badge.png)](https://www.versioneye.com/user/projects/52e4b4a3ec1375b57600000c)
 
 
