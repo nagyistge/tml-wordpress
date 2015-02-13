@@ -1,20 +1,20 @@
 {
-    "name": "tr8n/tr8n-wordpress-plugin",
-    "description": "Tr8n WordPress Plugin",
-    "keywords": ["wordpress", "plugin", "tr8n", "translation", "i18n", "internationalization", "t9n"],
-    "homepage": "https://tr8nhub.com",
+    "name": "translationexchange/wordpress",
+    "description": "Tml WordPress Plugin",
+    "keywords": ["wordpress", "plugin", "tml", "translation", "i18n", "internationalization", "t9n", "tml"],
+    "homepage": "http://translationexchange.com",
     "license": "MIT",
     "authors": [
         {
             "name": "Michael Berkovich",
-            "email": "michael@tr8nhub.com",
-            "homepage": "https://tr8nhub.com"
+            "email": "michael@translationexchange.com",
+            "homepage": "http://translationexchange.com"
         }
     ],
     "type": "wordpress-plugin",
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.0",
-        "tr8n/tr8n-client-sdk": "dev-master"
+        "translationexchange/tml": "dev-master"
     }
 }

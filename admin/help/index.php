@@ -1,21 +1,22 @@
 <?php
 
-if (\Tr8n\Config::instance()->isEnabled()) {
+use tml\Config;
+
+if (Config::instance()->isEnabled()) {
     ?>
     <div class="wrap" style="font-size:14px;padding:30px;">
-        <img src="<?php echo \Tr8n\Config::instance()->application->host ?>/assets/tr8n/tr8n_logo.png"><br><br>
-        <img src="<?php echo \Tr8n\Config::instance()->application->host ?>/assets/tr8n/spinner.gif" style="vertical-align:bottom">
-        Redirecting to Tr8n Wiki at <a href="http://wiki.tr8nhub.com/index.php?title=Wordpress_Plugin">http://wiki.tr8nhub.com</a> ...
+        <img src="<?php echo Config::instance()->application->host ?>/assets/tml/tml_logo.png"><br><br>
+        <img src="<?php echo Config::instance()->application->host ?>/assets/tml/spinner.gif" style="vertical-align:bottom">
+        Redirecting to Translation Exchange Documentation at <a href="http://translationexchange.com/docs">http://translationexchange.com/docs</a> ...
     </div>
 
     <script>
         window.setTimeout(function() {
-            location.href = "http://wiki.tr8nhub.com/index.php?title=Tr8n_WordPress_Plugin";
+            location.href = "http://translationexchange.com/docs";
         }, 2000);
     </script>
 <?php
 }
-
 ?>
 
 

@@ -1,7 +1,7 @@
 <?php
 
 #--
-# Copyright (c) 2010-2013 Michael Berkovich, tr8nhub.com
+# Copyright (c) 2015 Translation Exchange
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -23,6 +23,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #++
 
+use tml\Config;
+
 class LanguageSelectorWidget extends WP_Widget {
     function LanguageSelectorWidget() {
         $widget_ops = array(
@@ -31,17 +33,17 @@ class LanguageSelectorWidget extends WP_Widget {
         );
         $this->WP_Widget(
             'LanguageSelectorWidget',
-            'Tr8n Language Selector',
+            '   Language Selector',
             $widget_ops
         );
     }
 
     function widget($args, $instance) { // widget sidebar output
-        if (\Tr8n\Config::instance()->isDisabled()) {
+        if (Config::instance()->isDisabled()) {
             echo '<div class="page-title widget-title">Languages</div>';
             echo '<div style="border:0px solid #ccc; margin-bottom:15px; font-size:13px;">';
-            echo __("Tr8n was not able to initialize your application.") . " " . __("Please verify that you have properly configured your application key and secret: ") . " ";
-            echo '<a href="' . get_bloginfo('url') . '/wp-admin/admin.php?page=tr8n-admin">' . __("Tr8n Settings") . '</a>';
+            echo __("Tml was not able to initialize your application.") . " " . __("Please verify that you have properly configured your application key and secret: ") . " ";
+            echo '<a href="' . get_bloginfo('url') . '/wp-admin/admin.php?page=tml-admin">' . __("Tml Settings") . '</a>';
             echo "</div>";
             return;
         }
@@ -50,10 +52,10 @@ class LanguageSelectorWidget extends WP_Widget {
 //        echo $before_widget; // pre-widget code from theme
 
         $langs = "<ul>";
-        foreach(\Tr8n\Config::instance()->application->languages as $language) {
-            $bold = (\Tr8n\Config::instance()->current_language->locale == $language->locale);
+        foreach(Config::instance()->application->languages as $language) {
+            $bold = (Config::instance()->current_language->locale == $language->locale);
             $langs .= "<li>";
-            $langs .= "<a href='#' onClick='Tr8n.UI.LanguageSelector.change(\"" . $language->locale . "\");'>";
+            $langs .= "<a href='#' onClick='Tml.Utils.LanguageSelector.change(\"" . $language->locale . "\");'>";
             $langs .= "<img src='" . $language->flagUrl() . "' style='margin-right:3px;'>";
             $langs .= $language->name;
             $langs .= "</a></li>";
@@ -61,15 +63,15 @@ class LanguageSelectorWidget extends WP_Widget {
         $langs .= "</ul>";
 
         $translator_options = "";
-        if (\Tr8n\Config::instance()->current_translator) {
+        if (Config::instance()->current_translator) {
             $translator_options .= "<div style='margin-top:10px;margin-bottom:15px;font-size:10px;'>";
-            $translator_options .= "<a href='#' onClick='Tr8n.UI.LanguageSelector.toggleInlineTranslations();'>Toggle inline translations</a>";
+            $translator_options .= "<a href='#' onClick='Tml.Utils.LanguageSelector.toggleInlineTranslations();'>Toggle inline translations</a>";
             $translator_options .= "</div>";
         }
 
         print <<<EOM
         <aside id="meta-2" class="widget widget_meta masonry-brick" style="">
-        <div>Languages <span style='font-size:10px;color:#21759b;cursor:pointer;' onClick='Tr8n.UI.LanguageSelector.show(true);'>open</span></div>
+        <div>Languages <span style='font-size:10px;color:#21759b;cursor:pointer;' onClick='Tml.UI.LanguageSelector.show(true);'>open</span></div>
         <div style="border:0px solid #ccc; margin-bottom:15px;">
             $langs
 
