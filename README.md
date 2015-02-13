@@ -26,7 +26,7 @@ Create composer.json in the root folder of your application, and add the followi
             "minimum-stability": "dev",
             "require": {
                 "composer/installers": "v1.0.6",
-                "tml/tml-wordpress-plugin": "dev-master"
+                "translationexchange/tml-wordpress": "dev-master"
             }
         }
 
@@ -85,7 +85,7 @@ Links
 Copyright and license
 ==================
 
-Copyright (c) 2015, Translation Exchange
+Copyright (c) 2015, Translation Exchange, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
