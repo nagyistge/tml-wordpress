@@ -51,7 +51,7 @@ You should now see the Tml plugin as one of the options.
 
 Click on the "Activate" link. You should see now a new section on the left bar called "Tml".
 
-Before proceeding further, please visit http://tmlhub.com, register as a new user and create a new application.
+Before proceeding further, please visit http://translationexchange.com, register as a new user and create a new application.
 
 Once you have created a new application, go to the security tab in the application administration section and copy your application key and secret.
 
@@ -69,11 +69,7 @@ Once the inline translations are disabled, your site will contibue to remain tra
 Links
 ==================
 
-* Register on TranslationExchange.com: https://translationexchange.com
-
-* Read TranslationExchange's documentation: http://wiki.translationexchange.com
-
-* Visit TranslationExchange's blog: http://blog.translationexchange.com
+* Register at TranslationExchange.com: https://translationexchange.com
 
 * Follow TranslationExchange on Twitter: https://twitter.com/translationx
 
@@ -85,7 +81,7 @@ Links
 Copyright and license
 ==================
 
-Copyright (c) 2015, Translation Exchange, Inc.
+Copyright (c) 2015 Translation Exchange, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -105,5 +101,3 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
