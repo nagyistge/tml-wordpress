@@ -20,11 +20,11 @@
  * http://translationexchange.com/license
  *
  */
-add_option('tml_version', '0.1.0');
+add_option('tml_version', '0.1.2');
 
-require_once(dirname(__FILE__).'/../tml-php/library/tml.php');
+// require_once(dirname(__FILE__).'/../tml-php/library/tml.php');
 
-//require_once(dirname(__FILE__).'/../../../vendor/translationexchange/tml/library/tml.php');
+require_once(dirname(__FILE__).'/../../../vendor/translationexchange/tml/library/tml.php');
 //require_once( dirname( __FILE__ ) . '/sdk/library/Tml.php' );
 
 use tml\Config;
@@ -171,7 +171,7 @@ function tml_the_content_filter($content) {
             return $content;
         return trh($content);
     }
-    Logger::instance()->debug($content);
+    // Logger::instance()->debug($content);
     return $content;
 }
 add_filter('the_content', 'tml_the_content_filter');
@@ -252,11 +252,11 @@ function tml_menu_pages() {
     add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function);
 
     // Now add the submenu page for Help
-    $submenu_page_title = __('Tml Tools');
-    $submenu_title = __('Tools');
-    $submenu_slug = 'tml-tools';
-    $submenu_function = 'tml_tools';
-    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
+//    $submenu_page_title = __('Tml Tools');
+//    $submenu_title = __('Tools');
+//    $submenu_slug = 'tml-tools';
+//    $submenu_function = 'tml_tools';
+//    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
 
     // Now add the submenu page for Help
     $submenu_page_title = __('Tml Help');

@@ -1,5 +1,6 @@
 <?php
 
+use tml\Cache;
 use tml\Config;
 
 if (!current_user_can('manage_options')) {
@@ -78,9 +79,11 @@ $field_sets = array($application_fields, $translation_fields);
                 <?php echo __('Save Changes') ?>
             </button>
 
-            <button class="button" onClick="return updateCache();">
-                <?php echo __('Update Cache') ?>
-            </button>
+            <?php if (!Cache::instance()->isReadOnly()) { ?>
+                <button class="button" onClick="return updateCache();">
+                    <?php echo __('Update Cache') ?>
+                </button>
+            <?php } ?>
         </p>
 
     </form>
