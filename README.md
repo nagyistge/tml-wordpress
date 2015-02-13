@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.github.com/tml/tml/master/doc/screenshots/tmllogo.png">
+  <img src="https://avatars0.githubusercontent.com/u/1316274?v=3&s=200">
 </p>
 
 Tml Plugin For Wordpress
@@ -7,9 +7,8 @@ Tml Plugin For Wordpress
 
 This plugin uses Tml PHP Client SDK to enable inline translations of WordPress posts and page contents.
 
-[![Latest Stable Version](https://poser.pugx.org/tml/tml-wordpress-plugin/v/stable.png)](https://packagist.org/packages/tml/tml-wordpress-plugin)
-[![Dependency Status](https://www.versioneye.com/user/projects/52e4b4a3ec1375b57600000c/badge.png)](https://www.versioneye.com/user/projects/52e4b4a3ec1375b57600000c)
-
+[![Latest Stable Version](https://poser.pugx.org/translationexchange/tml-wordpress/v/stable.png)](https://packagist.org/packages/translationexchange/tml-wordpress)
+[![Dependency Status](https://www.versioneye.com/user/projects/54dd4a9dc1bbbd5f8200053d/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54dd4a9dc1bbbd5f8200053d)
 
 Installation
 ==================
@@ -51,7 +50,7 @@ You should now see the Tml plugin as one of the options.
 
 Click on the "Activate" link. You should see now a new section on the left bar called "Tml".
 
-Before proceeding further, please visit http://tmlhub.com, register as a new user and create a new application.
+Before proceeding further, please visit http://translationexchange.com, register as a new user and create a new application.
 
 Once you have created a new application, go to the security tab in the application administration section and copy your application key and secret.
 
@@ -69,11 +68,7 @@ Once the inline translations are disabled, your site will contibue to remain tra
 Links
 ==================
 
-* Register on TranslationExchange.com: https://translationexchange.com
-
-* Read TranslationExchange's documentation: http://wiki.translationexchange.com
-
-* Visit TranslationExchange's blog: http://blog.translationexchange.com
+* Register at TranslationExchange.com: https://translationexchange.com
 
 * Follow TranslationExchange on Twitter: https://twitter.com/translationx
 
@@ -85,7 +80,7 @@ Links
 Copyright and license
 ==================
 
-Copyright (c) 2015, Translation Exchange, Inc.
+Copyright (c) 2015 Translation Exchange, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -105,5 +100,3 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
