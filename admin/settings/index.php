@@ -11,8 +11,8 @@ $submit_field_name = 'tml_submit_hidden';
 $cache_field_name = 'tml_update_cache_hidden';
 
 $application_fields = array(
-    'tml_host' => array("title" => __('Host Url:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com"),
-    'tml_token' => array("title" => __('Application Key:'), "value" => get_option('tml_token'), "default" => ""),
+    'tml_host' => array("title" => __('Host:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com"),
+    'tml_token' => array("title" => __('Token:'), "value" => get_option('tml_token'), "default" => ""),
 );
 
 $translation_fields = array(
@@ -39,12 +39,13 @@ if (isset($_POST[ $submit_field_name ]) && $_POST[ $submit_field_name ] == 'Y') 
 <?php
 }
 
-$field_sets = array($application_fields, $translation_fields);
+//$field_sets = array($application_fields, $translation_fields);
+$field_sets = array($application_fields);
 
 ?>
 
 <div class="wrap">
-    <?php echo "<h2>" . __( 'Tml Application Settings' ) . "</h2>"; ?>
+    <?php echo "<h2>" . __( 'Translation Exchange Project Settings' ) . "</h2>"; ?>
     <form name="form1" method="post" action="">
         <input type="hidden" name="<?php echo $cache_field_name; ?>" id="<?php echo $cache_field_name; ?>" value="N">
         <input type="hidden" name="<?php echo $submit_field_name; ?>" id="<?php echo $submit_field_name; ?>" value="Y">
@@ -54,7 +55,7 @@ $field_sets = array($application_fields, $translation_fields);
             <?php foreach($field_set as $key => $field) { ?>
                 <?php $type = (!isset($field['type']) ? 'text' : $field['type']); ?>
                 <tr>
-                    <td style="width:150px;"><?php echo($field["title"]) ?></td>
+                    <td style="width:100px;"><?php echo($field["title"]) ?></td>
                     <td>
                         <?php if ($type == 'text') {  ?>
                             <input type="text" name="<?php echo($key) ?>" value="<?php echo($field["value"]) ?>" placeholder="<?php echo($field["default"]) ?>"  size="80">

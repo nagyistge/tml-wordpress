@@ -12,15 +12,21 @@
  */
 
 /*
- * Tml v0.2.0
+ * Tml v0.3.1
  * http://translationexchange.com/
  *
- * Copyright 2015, Michael Berkovich, TranslationExchange
+ * Copyright 2015, Translation Exchange, Inc.
  * Licensed under the MIT.
  * http://translationexchange.com/license
  *
  */
-add_option('tml_version', '0.1.2');
+
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+add_option('tml_version', '0.3.1');
 
 // require_once(dirname(__FILE__).'/../tml-php/library/tml.php');
 
@@ -33,7 +39,9 @@ use tml\TmlException;
 use tml\utils\ArrayUtils;
 use tml\utils\StringUtils;
 
-tml_init(get_option('tml_token'), get_option('tml_host'));
+if (get_option('tml_type') == "server") {
+    tml_init(get_option('tml_token'), get_option('tml_host'));
+}
 
 if (Config::instance()->isEnabled()) {
     apply_filters('debug', 'Tml Initialized');
@@ -214,25 +222,23 @@ add_action('shutdown', 'tml_request_shutdown');
  */
 
 function tml_enqueue_scripts() {
-    if (Config::instance()->isDisabled()) {
+    if (get_option('tml_type') == "server") {
         return;
     }
 
-//    wp_enqueue_script('tml_js', Config::instance()->application->tools['javascript']);
+    wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
+    wp_register_script('tml_init', plugins_url('/init.js',__FILE__) , false, null, true);
+
+    wp_enqueue_script('tml_js');
+    wp_enqueue_script('tml_init');
+
+    wp_localize_script('tml_init', 'TmlConfig', array(
+        "host" => get_option('tml_host'),
+        "token" => get_option('tml_token'),
+        "version" => get_option('tml_version', 1)
+    ));
 }
 add_action('wp_enqueue_scripts', 'tml_enqueue_scripts');
-add_action('admin_init', 'tml_enqueue_scripts');
-
-
-function tml_enqueue_styles() {
-    if (Config::instance()->isDisabled()) {
-        return;
-    }
-
-//    wp_enqueue_script('tml_css', Config::instance()->application->tools['stylesheet']);
-}
-add_action('wp_enqueue_style', 'tml_enqueue_styles');
-add_action('admin_init', 'tml_enqueue_styles');
 
 /*
  * Admin Settings
@@ -300,7 +306,6 @@ function tml_plugin_action_links($links, $file) {
 }
 add_filter('plugin_action_links', 'tml_plugin_action_links', 10, 2);
 
-
 /*
  * Widgets
  */
@@ -310,7 +315,6 @@ function tml_register_widgets() {
     register_widget('LanguageSelectorWidget');
 }
 add_action('widgets_init', 'tml_register_widgets');
-
 
 /**
  * Change labels from default to tml translated
