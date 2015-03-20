@@ -7,38 +7,12 @@ Tml Plugin For Wordpress
 
 This plugin uses Tml PHP Client SDK to enable inline translations of WordPress posts and page contents.
 
-[![Latest Stable Version](https://poser.pugx.org/translationexchange/tml-wordpress/v/stable.png)](https://packagist.org/packages/translationexchange/tml-wordpress)
-[![Dependency Status](https://www.versioneye.com/user/projects/54dd4a9dc1bbbd5f8200053d/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54dd4a9dc1bbbd5f8200053d)
 
 Installation
 ==================
 
-Tml WordPress Plugin can be installed using the composer dependency manager. If you don't already have composer installed on your system, you can get it using the following command:
-
-        $ cd YOUR_APPLICATION_FOLDER
-        $ curl -s http://getcomposer.org/installer | php
 
 
-Create composer.json in the root folder of your application, and add the following content:
-
-        {
-            "minimum-stability": "dev",
-            "require": {
-                "composer/installers": "v1.0.6",
-                "translationexchange/tml-wordpress": "dev-master"
-            }
-        }
-
-This tells composer that your application requires tml-wordpress-plugin to be installed.
-
-Now install Tml WordPress plugin by executing the following command:
-
-
-        $ php composer.phar install
-
-
-The installation will put the Tml WordPress plugin inside the wp-content/plugins/tml-wordpress-plugin folder.
-At the same time, all other dependencies and libraries will be placed in the vendor folder and the WordPress plugin will refer to them through relative path.
 
 
 Integration
@@ -46,23 +20,21 @@ Integration
 
 Now we can active the plugin by logging into to WordPress with an admin account and navigate to the Plugins section.
 
-You should now see the Tml plugin as one of the options.
+You should now see the Translation Exchange plugin as one of the options.
 
-Click on the "Activate" link. You should see now a new section on the left bar called "Tml".
+Click on the "Activate" link. You should see now a new section on the left bar called "Translation Exchange".
 
-Before proceeding further, please visit http://translationexchange.com, register as a new user and create a new application.
+Before proceeding further, please visit https://dashboard.translationexchange.com/signup, register as a new user and create a project.
 
-Once you have created a new application, go to the security tab in the application administration section and copy your application key and secret.
+Copy your project token.
 
-Now you can go back to your WordPress and provide your application details in the Tml configuration section.
+Update WordPress plugin with your project token and save settings.
 
-After you save the changes, you can add a language selector widget to your WordPess UI by visiting the Appearance > Widgets section.
+After you save the changes, you can add a language selector widget to your WordPress UI by visiting the Appearance > Widgets section.
 
-The Tml Language Selector allows users to change languages of WordPress and your posts.
+The Language Selector allows users to change languages of WordPress and your posts.
 
-Now you are ready to invite translators and translate your blogs. By enabling inline translations, you can translate entire paragraphs inline:
-
-Once the inline translations are disabled, your site will contibue to remain translated:
+Now you are ready to invite translators and translate your blogs. By enabling inline translations, you can translate the site in-context.
 
 
 Links

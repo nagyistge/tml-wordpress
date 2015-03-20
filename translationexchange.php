@@ -1,37 +1,55 @@
 <?php
 /*
-  Plugin Name: Tml
-  Plugin URI: http://translationexchange.com/
-  Description: Translation service
+  Plugin Name: Translation Exchange
+  Plugin URI: http://wordpress.org/plugins/translationexchange/
+  Description: Translate your WordPress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.1.0
+  Version: 0.2.1
   Author URI: http://translationexchange.com/
   License: MIT (http://opensource.org/licenses/MIT)
-  Text Domain: translationexchange
-  Domain Path: /
  */
 
 /*
- * Tml v0.3.1
- * http://translationexchange.com/
- *
- * Copyright 2015, Translation Exchange, Inc.
- * Licensed under the MIT.
- * http://translationexchange.com/license
- *
- */
+  Copyright (c) 2015 Translation Exchange, Inc
+
+   _______                  _       _   _             ______          _
+  |__   __|                | |     | | (_)           |  ____|        | |
+     | |_ __ __ _ _ __  ___| | __ _| |_ _  ___  _ __ | |__  __  _____| |__   __ _ _ __   __ _  ___
+     | | '__/ _` | '_ \/ __| |/ _` | __| |/ _ \| '_ \|  __| \ \/ / __| '_ \ / _` | '_ \ / _` |/ _ \
+     | | | | (_| | | | \__ \ | (_| | |_| | (_) | | | | |____ >  < (__| | | | (_| | | | | (_| |  __/
+     |_|_|  \__,_|_| |_|___/_|\__,_|\__|_|\___/|_| |_|______/_/\_\___|_| |_|\__,_|_| |_|\__, |\___|
+                                                                                         __/ |
+                                                                                        |___/
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the
+  "Software"), to deal in the Software without restriction, including
+  without limitation the rights to use, copy, modify, merge, publish,
+  distribute, sublicense, and/or sell copies of the Software, and to
+  permit persons to whom the Software is furnished to do so, subject to
+  the following conditions:
+ 
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+ 
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-add_option('tml_version', '0.3.1');
+add_option('tml_version', '1');
+add_option('tml_mode', 'client');
+add_option('tml_host', 'https://api.translationexchange.com');
 
-// require_once(dirname(__FILE__).'/../tml-php/library/tml.php');
-
-require_once(dirname(__FILE__).'/../../../vendor/translationexchange/tml/library/tml.php');
-//require_once( dirname( __FILE__ ) . '/sdk/library/Tml.php' );
+require_once(dirname(__FILE__).'/tml/library/tml.php');
 
 use tml\Config;
 use tml\Logger;
@@ -39,20 +57,13 @@ use tml\TmlException;
 use tml\utils\ArrayUtils;
 use tml\utils\StringUtils;
 
-if (get_option('tml_type') == "server") {
+if (get_option('tml_mode') == "server") {
     tml_init(get_option('tml_token'), get_option('tml_host'));
 }
 
 if (Config::instance()->isEnabled()) {
     apply_filters('debug', 'Tml Initialized');
 }
-
-//class TmlWordpressConfig extends \Tml\Config {
-//    public function isCachingEnabled() {
-//        return true;
-//    }
-//}
-//\Tml\Config::init(new TmlWordpressConfig());
 
 function tml_prepare_tokens_and_options($args) {
     $tokens = array();
@@ -73,19 +84,10 @@ function tml_prepare_tokens_and_options($args) {
         $options = json_decode($args['options'], true);
     }
 
-    foreach(array_values($args) as $value) {
-        if (StringUtils::startsWith('token:', $value)) {
-            $parts = explode('=', substr($value, 6));
-            $value = trim($parts[1], '\'"');
+    foreach($args as $key => $value) {
+        // echo($key . " = " . $value . "<br>");
 
-            $parts = explode('.', $parts[0]);
-            if (count($parts) == 1) {
-                $tokens[$parts[0]] = $value;
-            } else {
-                if (!isset($tokens[$parts[0]])) $tokens[$parts[0]] = array();
-                ArrayUtils::createAttribute($tokens[$parts[0]], array_slice($parts,1), $value);
-            }
-        } else if (StringUtils::startsWith('option:', $value)) {
+        if (StringUtils::startsWith('option:', $value)) {
             $parts = explode('=', substr($value, 7));
             $value = trim($parts[1], '\'"');
 
@@ -96,6 +98,19 @@ function tml_prepare_tokens_and_options($args) {
                 if (!isset($options[$parts[0]])) $options[$parts[0]] = array();
                 ArrayUtils::createAttribute($options[$parts[0]], array_slice($parts,1), $value);
             }
+        } else if (StringUtils::startsWith('token:', $value)) {
+            $parts = explode('=', substr($value, 6));
+            $value = trim($parts[1], '\'"');
+
+            $parts = explode('.', $parts[0]);
+            if (count($parts) == 1) {
+                $tokens[$parts[0]] = $value;
+            } else {
+                if (!isset($tokens[$parts[0]])) $tokens[$parts[0]] = array();
+                ArrayUtils::createAttribute($tokens[$parts[0]], array_slice($parts,1), $value);
+            }
+        } else {
+            $tokens[$key] = $value;
         }
     }
 
@@ -212,31 +227,37 @@ function tml_request_shutdown() {
 add_action('shutdown', 'tml_request_shutdown');
 
 /*
- * Api Forwarding
- */
-
-//add_rewrite_rule('^tml/api/([^/]*)/([^/]*)/?','vendor/tml_php_clientsdk/library/Tml/Api/Router.php?controller=$matches[1]&action=$matches[2]','top');
-
-/*
  * Javascript
  */
 
 function tml_enqueue_scripts() {
-    if (get_option('tml_type') == "server") {
-        return;
+    if (get_option('tml_mode') == "server") {
+        wp_register_script('tml_init', plugins_url('/assets/javascripts/init_server.js', __FILE__) , false, null, true);
+        wp_enqueue_script('tml_init');
+        wp_localize_script('tml_init', 'TmlConfig', array(
+            "host" => get_option('tml_host'),
+            "key" => tml_application()->key,
+            "tools" => tml_application()->tools["host"],
+            "stylesheet" => tml_application()->tools["stylesheet"],
+            "css" => tml_application()->css,
+            "javascript" => tml_application()->tools["javascript"],
+            "default_locale" => tml_application()->default_locale,
+            "page_locale" => Config::instance()->current_language->locale,
+            "locale" => Config::instance()->current_language->locale,
+            "shortcuts" => (tml_application()->isFeatureEnabled("shortcuts") ? tml_application()->shortcuts : null)
+        ));
+    } else if (get_option('tml_mode') == "client") {
+  //    wp_register_script('tml_js', ( '//localhost:8000/javascripts/tml.js' ), false, null, false);
+        wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
+        wp_register_script('tml_init', plugins_url('/assets/javascripts/init_client.js', __FILE__) , false, null, true);
+        wp_enqueue_script('tml_js');
+        wp_enqueue_script('tml_init');
+        wp_localize_script('tml_init', 'TmlConfig', array(
+            "host" => get_option('tml_host'),
+            "token" => get_option('tml_token'),
+            "version" => get_option('tml_version', 1)
+        ));
     }
-
-    wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
-    wp_register_script('tml_init', plugins_url('/init.js',__FILE__) , false, null, true);
-
-    wp_enqueue_script('tml_js');
-    wp_enqueue_script('tml_init');
-
-    wp_localize_script('tml_init', 'TmlConfig', array(
-        "host" => get_option('tml_host'),
-        "token" => get_option('tml_token'),
-        "version" => get_option('tml_version', 1)
-    ));
 }
 add_action('wp_enqueue_scripts', 'tml_enqueue_scripts');
 
@@ -246,12 +267,12 @@ add_action('wp_enqueue_scripts', 'tml_enqueue_scripts');
 
 function tml_menu_pages() {
     // Add the top-level admin menu
-    $page_title = 'Tml Settings';
-    $menu_title = 'Tml';
+    $page_title = 'Translation Exchange Settings';
+    $menu_title = 'Translation Exchange';
     $capability = 'manage_options';
     $menu_slug = 'tml-admin';
     $function = 'tml_settings';
-    add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function);
+    add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function,  plugin_dir_url(__FILE__) . "assets/images/icon.png");
 
     // Add submenu page with same slug as parent to ensure no duplicates
     $sub_menu_title = __('Settings');

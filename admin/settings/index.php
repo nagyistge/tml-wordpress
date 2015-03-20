@@ -11,8 +11,12 @@ $submit_field_name = 'tml_submit_hidden';
 $cache_field_name = 'tml_update_cache_hidden';
 
 $application_fields = array(
-    'tml_host' => array("title" => __('Host:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com"),
-    'tml_token' => array("title" => __('Token:'), "value" => get_option('tml_token'), "default" => ""),
+    'tml_host' => array("title" => __('Host:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com", "style" => "display:none"),
+    'tml_token' => array("title" => __('Project Token:'), "value" => get_option('tml_token'), "default" => ""),
+    'tml_mode' => array("title" => __('Mode:'), "value" => get_option('tml_mode'), "default" => "", "type" => "radio", "options" => array(
+        array("title" => __('Client-side using JavaScript'), "value" => "client"),
+        array("title" => __('Server-side using TML'), "value" => "server"),
+    )),
 );
 
 $translation_fields = array(
@@ -54,11 +58,18 @@ $field_sets = array($application_fields);
         <table>
             <?php foreach($field_set as $key => $field) { ?>
                 <?php $type = (!isset($field['type']) ? 'text' : $field['type']); ?>
-                <tr>
-                    <td style="width:100px;"><?php echo($field["title"]) ?></td>
-                    <td>
+                <?php $style = (!isset($field['style']) ? '' : $field['style']); ?>
+                <tr style="<?php echo($style) ?>">
+                    <td style="width:100px; padding:5px;"><?php echo($field["title"]) ?></td>
+                    <td style="padding:5px;">
                         <?php if ($type == 'text') {  ?>
                             <input type="text" name="<?php echo($key) ?>" value="<?php echo($field["value"]) ?>" placeholder="<?php echo($field["default"]) ?>"  size="80">
+                        <?php } else if ($type == 'radio' && isset($field["options"])) { ?>
+                            <?php foreach($field["options"] as $option) { ?>
+                                <input type="radio" name="<?php echo($key) ?>" value="<?php echo($option["value"]) ?>" <?php if ($field["value"] == $option["value"]) echo("checked"); ?> >
+                                <?php echo($option["title"]) ?>
+                                &nbsp;&nbsp;
+                            <?php } ?>
                         <?php } else if ($type == 'checkbox') { ?>
                             <?php
                                 $value = $field["value"];

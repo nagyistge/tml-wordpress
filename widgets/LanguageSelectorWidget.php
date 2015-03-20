@@ -39,6 +39,18 @@ class LanguageSelectorWidget extends WP_Widget {
     }
 
     function widget($args, $instance) { // widget sidebar output
+        if (get_option("tml_mode") == 'client') {
+            print <<<EOM
+<aside id="meta-2" class="widget widget_meta masonry-brick" style="">
+<div>Languages</div>
+<div style="border:0px solid #ccc; margin-bottom:15px;">
+    <div data-tml-language-selector='popup'></div>
+</div>
+</aside>
+EOM;
+           return;
+        }
+
         if (Config::instance()->isDisabled()) {
             echo '<div class="page-title widget-title">Languages</div>';
             echo '<div style="border:0px solid #ccc; margin-bottom:15px; font-size:13px;">';
@@ -57,7 +69,7 @@ class LanguageSelectorWidget extends WP_Widget {
             $langs .= "<li>";
             $langs .= "<a href='#' onClick='Tml.Utils.LanguageSelector.change(\"" . $language->locale . "\");'>";
             $langs .= "<img src='" . $language->flagUrl() . "' style='margin-right:3px;'>";
-            $langs .= $language->name;
+            $langs .= $language->english_name;
             $langs .= "</a></li>";
         }
         $langs .= "</ul>";
@@ -65,19 +77,20 @@ class LanguageSelectorWidget extends WP_Widget {
         $translator_options = "";
         if (Config::instance()->current_translator) {
             $translator_options .= "<div style='margin-top:10px;margin-bottom:15px;font-size:10px;'>";
-            $translator_options .= "<a href='#' onClick='Tml.Utils.LanguageSelector.toggleInlineTranslations();'>Toggle inline translations</a>";
+            $translator_options .= "<a href='#' onClick='Tml.Utils.toggleInlineTranslations();'>Toggle inline translations</a>";
             $translator_options .= "</div>";
         }
 
         print <<<EOM
-        <aside id="meta-2" class="widget widget_meta masonry-brick" style="">
-        <div>Languages <span style='font-size:10px;color:#21759b;cursor:pointer;' onClick='Tml.UI.LanguageSelector.show(true);'>open</span></div>
-        <div style="border:0px solid #ccc; margin-bottom:15px;">
-            $langs
+<aside id="meta-2" class="widget widget_meta masonry-brick" style="">
+<div>Languages <span style='font-size:10px;color:#21759b;cursor:pointer;' onClick='Tml.UI.LanguageSelector.show(true);'>open</span></div>
+<div style="border:0px solid #ccc; margin:15px 0px;">
+    $langs
 
-            $translator_options
-        </div>
-        </aside>
+    $translator_options
+    <div style="color:#888; font-size:10px; padding-top:10px;">Powered by Translation Exchange</div>
+</div>
+</aside>
 EOM;
 //        echo $after_widget; // post-widget code from theme
     }
