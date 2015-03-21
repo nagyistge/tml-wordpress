@@ -1,23 +1,22 @@
-<?php
+<div id="tml-translation-center-loading" style="text-align:center; padding-top: 100px; font-size: 20px;">
+    <img src="<?php echo plugins_url( 'translationexchange/assets/images/logo.png' ) ?>" style="width: 120px; margin: 20px;">
+    <br>
+    Initializing Translation Center....
+</div>
 
-use tml\Config;
+<iframe id="tml-translation-center" src="http://localhost:3002/login?app_token=<?php echo get_option('tml_token')?>"
+        style="display:none; margin-left:-20px; width: calc(100% + 20px); height: 400px;"
+        onload="showTranslationCenter()"></iframe>
 
-if (Config::instance()->isEnabled()) {
-    ?>
-        <div class="wrap" style="font-size:14px;padding:30px;">
-            <img src="<?php echo Config::instance()->application->host ?>/assets/tml/tml_logo.png"><br><br>
-            <img src="<?php echo Config::instance()->application->host ?>/assets/tml/spinner.gif" style="vertical-align:bottom">
-            Redirecting to Tml service at <a href="<?php echo Config::instance()->application->host ?>"><?php echo Config::instance()->application->host ?></a> ...
-        </div>
+<script>
+    function showTranslationCenter() {
+        jQuery("#tml-translation-center-loading").hide();
+        jQuery("#tml-translation-center").show();
+    }
 
-        <script>
-            window.setTimeout(function() {
-                location.href = "<?php echo Config::instance()->application->host ?>/tml/app/phrases/index";
-            }, 2000);
-        </script>
-    <?php
-}
-
-?>
-
-
+    function resizeIframe() {
+        jQuery("#tml-translation-center").css('height',window.innerHeight - 100);
+    }
+    resizeIframe();
+    jQuery(window).on('resize',resizeIframe )
+</script>

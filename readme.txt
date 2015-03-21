@@ -4,8 +4,8 @@ Tags: tml, localization, localize, localisation, localise, translate, translatio
 Requires at least: 3.0
 Tested up to: 4.1
 Stable tag: 0.5
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: MIT
+License URI: http://opensource.org/licenses/MIT
 
 Translate your WordPress site in minutes.
 

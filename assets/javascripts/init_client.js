@@ -1,8 +1,13 @@
 if (TmlConfig && TmlConfig.token) {
-    tml.init(TmlConfig.token, {
+    var options = {
         host: TmlConfig.host,
         element: document.body,
-        version: TmlConfig.version || 1,
         cdn: false
-    });
+    };
+
+    if (TmlConfig.cache) {
+        options.cache = TmlConfig.cache;
+    }
+
+    tml.init(TmlConfig.token, options);
 }

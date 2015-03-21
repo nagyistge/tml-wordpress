@@ -45,9 +45,15 @@ define( 'WP_DEBUG_LOG', true );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-add_option('tml_version', '1');
 add_option('tml_mode', 'client');
+
+add_option('tml_cache_version', '0');
+//update_option('tml_cache_version', '0');
+
 add_option('tml_host', 'https://api.translationexchange.com');
+update_option('tml_host', 'http://0.0.0.0:3000');
+
+add_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 
 require_once(dirname(__FILE__).'/tml/library/tml.php');
 
@@ -57,7 +63,18 @@ use tml\TmlException;
 use tml\utils\ArrayUtils;
 use tml\utils\StringUtils;
 
-if (get_option('tml_mode') == "server") {
+if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "server_manual") {
+    if (get_option('tml_cache_version') == '0') {
+        Config::instance()->initCache(array("enabled" => false));
+    } else {
+        Config::instance()->initCache(array(
+            "enabled" => true,
+            "adapter" => "file",
+            "path" => get_option('tml_cache_path'),
+            "version" => get_option('tml_cache_version', 1)
+        ));
+    }
+
     tml_init(get_option('tml_token'), get_option('tml_host'));
 }
 
@@ -170,7 +187,7 @@ function tml_block($atts, $content = null) {
 add_shortcode('tml:block', 'tml_block', 2);
 
 function tml_title($title, $id) {
-    if (get_option('tml_translate_html') == 'true') {
+    if (get_option('tml_mode') == "server_automated") {
         if ($title != strip_tags($title)) {
             return trh($title);
         }
@@ -180,7 +197,6 @@ function tml_title($title, $id) {
     return do_shortcode($title);
 }
 add_filter('the_title', 'tml_title', 10, 2);
-add_filter('widget_title', 'tml_title', 10, 2);
 add_filter('wp_title', 'tml_title', 10, 2);
 
 // function tml_wp_title_filter($title, $id) {
@@ -189,7 +205,7 @@ add_filter('wp_title', 'tml_title', 10, 2);
 // add_filter('wp_title', 'tml_wp_title_filter', 10, 2);
 
 function tml_the_content_filter($content) {
-    if (get_option('tml_translate_html') == 'true') {
+    if (get_option('tml_mode') == "server_automated") {
         if (strstr($content, 'tml:manual') !== false)
             return $content;
         return trh($content);
@@ -211,7 +227,7 @@ function tml_the_excerpt_filter($content) {
 add_filter('the_excerpt', 'tml_the_excerpt_filter');
 
 function tml_comment_text_filter($content) {
-    if (get_option('tml_translate_html') == 'true') {
+    if (get_option('tml_mode') == "server_automated") {
         return trh($content);
     }
 //    \Tml\Logger::instance()->debug($content);
@@ -231,7 +247,7 @@ add_action('shutdown', 'tml_request_shutdown');
  */
 
 function tml_enqueue_scripts() {
-    if (get_option('tml_mode') == "server") {
+    if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "server_manual") {
         wp_register_script('tml_init', plugins_url('/assets/javascripts/init_server.js', __FILE__) , false, null, true);
         wp_enqueue_script('tml_init');
         wp_localize_script('tml_init', 'TmlConfig', array(
@@ -252,11 +268,17 @@ function tml_enqueue_scripts() {
         wp_register_script('tml_init', plugins_url('/assets/javascripts/init_client.js', __FILE__) , false, null, true);
         wp_enqueue_script('tml_js');
         wp_enqueue_script('tml_init');
-        wp_localize_script('tml_init', 'TmlConfig', array(
+        $options = array(
             "host" => get_option('tml_host'),
             "token" => get_option('tml_token'),
-            "version" => get_option('tml_version', 1)
-        ));
+            "version" => get_option('tml_cache_version', 1)
+        );
+
+        if (get_option("tml_cache_version") != '0') {
+            $options['cache'] = array("path" => plugins_url("translationexchange/cache/" . get_option("tml_cache_version")));
+        }
+
+        wp_localize_script('tml_init', 'TmlConfig', $options);
     }
 }
 add_action('wp_enqueue_scripts', 'tml_enqueue_scripts');
@@ -279,18 +301,18 @@ function tml_menu_pages() {
     add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function);
 
     // Now add the submenu page for Help
-//    $submenu_page_title = __('Tml Tools');
-//    $submenu_title = __('Tools');
-//    $submenu_slug = 'tml-tools';
-//    $submenu_function = 'tml_tools';
-//    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
+    $submenu_page_title = __('Translation Center');
+    $submenu_title = __('Translation Center');
+    $submenu_slug = 'tml-tools';
+    $submenu_function = 'tml_tools';
+    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
 
     // Now add the submenu page for Help
-    $submenu_page_title = __('Tml Help');
-    $submenu_title = __('Help');
-    $submenu_slug = 'tml-help';
-    $submenu_function = 'tml_help';
-    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
+//    $submenu_page_title = __('Tml Help');
+//    $submenu_title = __('Help');
+//    $submenu_slug = 'tml-help';
+//    $submenu_function = 'tml_help';
+//    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
 }
 add_action('admin_menu', 'tml_menu_pages');
 
@@ -343,13 +365,11 @@ add_action('widgets_init', 'tml_register_widgets');
  * @link http://codex.wordpress.org/Plugin_API/Filter_Reference/gettext
  */
 function tml_translate_field_names( $translated_text, $text, $domain ) {
-//    return trh($text, null, array(), array("source" => "wordpress"));
-    if (get_option('tml_translate_wordpress') == 'true') {
+    if (get_option('tml_mode') == "server_automated") {
         foreach(array('%s', 'http://', '%1', '%2', '%3', '%4', '&#', '%d', '&gt;') as $token) {
             if (strpos($text, $token) !== FALSE) return $translated_text;
         }
-        return tr($text, null, array(), array("source" => "wordpress"));
-//    return "[" . $translated_text . "]";
+        return trl($text, null, array(), array("source" => "wordpress"));
     }
     return $translated_text;
 }
