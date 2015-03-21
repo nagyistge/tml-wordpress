@@ -365,6 +365,10 @@ add_action('widgets_init', 'tml_register_widgets');
  * @link http://codex.wordpress.org/Plugin_API/Filter_Reference/gettext
  */
 function tml_translate_field_names( $translated_text, $text, $domain ) {
+    if (!Config::instance()->isEnabled()) {
+        return $translated_text;
+    }
+
     if (get_option('tml_mode') == "server_automated") {
         foreach(array('%s', 'http://', '%1', '%2', '%3', '%4', '&#', '%d', '&gt;') as $token) {
             if (strpos($text, $token) !== FALSE) return $translated_text;
