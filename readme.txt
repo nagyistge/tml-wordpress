@@ -2,7 +2,7 @@
 Contributors: translationx
 Tags: tml, localization, localize, localisation, localise, translate, translation, translator, translations, l10n, i18n, tr8n, language, switch, change, switcher
 Requires at least: 3.0
-Tested up to: 4.1
+Tested up to: 4.1.1
 Stable tag: 0.5
 License: MIT
 License URI: http://opensource.org/licenses/MIT

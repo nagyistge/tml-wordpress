@@ -8,6 +8,15 @@ if (!current_user_can('manage_options')) {
     wp_die('You do not have sufficient permissions to access this page.');
 }
 
+if (isset($_POST['action']) && $_POST['action'] == 'delete_cache') {
+    $version_path = get_option('tml_cache_path') . "/" . $_POST['version'];
+    FileUtils::rrmdir($version_path);
+}
+
+if (isset($_POST['action']) && $_POST['action'] == 'use_cache') {
+    update_option("tml_cache_version", $_POST['version']);
+}
+
 if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
     echo "<p>Downloading latest cache snapshot from Translation Exchange.... </p>";
 
@@ -85,10 +94,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
         }
         ?>
         <div class="updated"><p><strong><?php _e('Settings have been saved.'); ?></strong></p></div>
-    <?php } else if (isset($_POST[ $cache_field_name ]) && $_POST[ $cache_field_name ] == 'Y') {
-        Config::instance()->incrementCache();
-    ?>
-        <div class="updated"><p><strong><?php _e('Cache has been updated.'); ?></strong></p></div>
     <?php
     }
 
@@ -98,10 +103,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
     ?>
 
     <div class="wrap">
-        <h1>
+        <h2>
             <img src="<?php echo plugins_url( 'translationexchange/assets/images/logo.png' ) ?>" style="width: 30px; vertical-align:middle; margin: 0px 5px;">
             <?php echo __( 'Translation Exchange Project Settings' ); ?>
-        </h1>
+        </h2>
 
         <hr />
 
@@ -154,8 +159,13 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             </table>
         </form>
 
+        <h2>
+            <?php echo __( 'Translation Cache Settings' ); ?>
+        </h2>
+
         <form id="cache_form" method="post" action="">
-            <input type="hidden" name="action" value="download_cache">
+            <input type="hidden" name="action" id="cache_action" value="download_cache">
+            <input type="hidden" name="version" id="cache_version" value="">
 
             <?php if (get_option("tml_token") != "") { ?>
                 <hr />
@@ -165,21 +175,69 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                         <td style="width:100px; padding:10px; vertical-align: top;">Local Cache:</td>
                         <td style="padding:10px; vertical-align: top;">
                             <?php
-                                $versions = array_reverse(scandir(get_option('tml_cache_path')));
-                                if (array_count_values($versions) == 0) {
-                                    echo "never generated";
+                                $folders = array_reverse(scandir(get_option('tml_cache_path')));
+                                $snapshots = array();
+                                foreach ($folders as $folder) {
+                                    $path = get_option('tml_cache_path') . "/" . $folder;
+                                    if (!is_dir($path)) continue;
+                                    if ($folder == '.' || $folder == '..') continue;
+
+                                    $data = file_get_contents($path . "/snapshot.json");
+                                    $snapshot = json_decode($data, true);
+                                    $snapshot['path'] = $path;
+                                    array_push($snapshots, $snapshot);
+                                }
+
+                                if (count($snapshots) == 0) {
+                                    update_option("tml_cache_version", '0');
+                                    echo "no snapshots available";
                                 } else {
-                                    foreach ($versions as $version) {
-                                        if (!is_dir(get_option('tml_cache_path') . "/" . $version)) continue;
-                                        if ($version == '.' || $version == '..') continue;
+                                    foreach ($snapshots as $snapshot) {
+                                        ?>
+                                            <div style="border: 1px solid #ccc; width: 600px; margin-bottom: 10px;">
+                                                <div style="background:#fefefe; padding: 5px; border-bottom: 1px solid #ccc;">
+                                                    <div style="float:right; color:#888;">
+                                                        <?php
+                                                        if ($snapshot['version'] === get_option("tml_cache_version")) {
+                                                           echo "<strong>current</strong>";
+                                                        } else {
+                                                            ?> <a href="#" onclick="useCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none">use</a> <?php
+                                                        }
+                                                        ?>
+                                                        <span style="color:#ccc;">|</span>
+                                                        <a href="#" onclick="deleteCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none">remove</a>
+                                                    </div>
 
-                                        if ($version === get_option("tml_cache_version")) {
-                                            echo "<strong>$version</strong> - current";
-                                        } else {
-                                            echo $version;
-                                        }
+                                                    <?php
+                                                        if ($snapshot['version'] === get_option("tml_cache_version")) {
+                                                            echo "<strong>Generated On: " . $snapshot['created_at'] . "</strong>";
+                                                        } else {
+                                                            echo "<span style='color: #888;'>Generated On: " . $snapshot['created_at'] . "</span>";
+                                                        }
+                                                    ?>
+                                                </div>
+                                                <div style="padding: 5px;">
+                                                    <table style="width:100%; font-size:12px;" cellspacing="0" cellpadding="0">
+                                                        <tr>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Languages</td>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Phrases</td>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Translations</td>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Translated</td>
+                                                            <td style="padding:3px; width: 20%; color: #888;">Approved</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['language_count']; ?></td>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['key_count']; ?></td>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['translation_count']; ?></td>
+                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['percent_translated']; ?>%</td>
+                                                            <td style="padding:3px;"><?php echo $snapshot['metrics']['percent_locked']; ?>%</td>
+                                                        </tr>
+                                                    </table>
+                                                    <!-- ?php var_dump($snapshot['metrics']) ? -->
+                                                </div>
+                                            </div>
 
-                                        echo "<br>";
+                                    <?php
                                     }
                                 }
                             ?>
@@ -212,7 +270,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
             var cache = window.localStorage;
             for (var key in cache){
-                if(key.match(/^tml_v/)) cache.removeItem(key);
+                if(key.match(/^tml_/)) cache.removeItem(key);
             }
             window.location.reload();
             return false;
@@ -224,6 +282,22 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             document.getElementById("cache_form").submit();
             return true;
         }
+
+        function deleteCache(version) {
+            if (!confirm("<?php echo __("Are you sure you want to remove this cache version?") ?>"))
+                return false;
+
+            jQuery("#cache_action").val("delete_cache");
+            jQuery("#cache_version").val(version);
+            document.getElementById("cache_form").submit();
+        }
+
+        function useCache(version) {
+            jQuery("#cache_action").val("use_cache");
+            jQuery("#cache_version").val(version);
+            document.getElementById("cache_form").submit();
+        }
+
     </script>
 
 <?php } ?>

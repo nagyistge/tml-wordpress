@@ -263,19 +263,21 @@ function tml_enqueue_scripts() {
             "shortcuts" => (tml_application()->isFeatureEnabled("shortcuts") ? tml_application()->shortcuts : null)
         ));
     } else if (get_option('tml_mode') == "client") {
-  //    wp_register_script('tml_js', ( '//localhost:8000/javascripts/tml.js' ), false, null, false);
-        wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
+        wp_register_script('tml_js', ( '//localhost:8080/tml.js' ), false, null, false);
+//        wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
         wp_register_script('tml_init', plugins_url('/assets/javascripts/init_client.js', __FILE__) , false, null, true);
         wp_enqueue_script('tml_js');
         wp_enqueue_script('tml_init');
         $options = array(
             "host" => get_option('tml_host'),
-            "token" => get_option('tml_token'),
-            "version" => get_option('tml_cache_version', 1)
+            "token" => get_option('tml_token')
         );
 
         if (get_option("tml_cache_version") != '0') {
-            $options['cache'] = array("path" => plugins_url("translationexchange/cache/" . get_option("tml_cache_version")));
+            $options['cache'] = array(
+                "path" => plugins_url("translationexchange/cache/" . get_option("tml_cache_version")),
+                "version" => get_option('tml_cache_version')
+            );
         }
 
         wp_localize_script('tml_init', 'TmlConfig', $options);
@@ -296,18 +298,21 @@ function tml_menu_pages() {
     $function = 'tml_settings';
     add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function,  plugin_dir_url(__FILE__) . "assets/images/icon.png");
 
-    // Add submenu page with same slug as parent to ensure no duplicates
     $sub_menu_title = __('Settings');
     add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function);
 
-    // Now add the submenu page for Help
+    $submenu_page_title = __('Dashboard');
+    $submenu_title = __('Dashboard');
+    $submenu_slug = 'tml-dashboard';
+    $submenu_function = 'tml_dashboard';
+    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
+
     $submenu_page_title = __('Translation Center');
     $submenu_title = __('Translation Center');
     $submenu_slug = 'tml-tools';
     $submenu_function = 'tml_tools';
     add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
 
-    // Now add the submenu page for Help
 //    $submenu_page_title = __('Tml Help');
 //    $submenu_title = __('Help');
 //    $submenu_slug = 'tml-help';
@@ -338,6 +343,14 @@ function tml_tools() {
     }
 
     include('admin/tools/index.php');
+}
+
+function tml_dashboard() {
+    if (!current_user_can('manage_options')) {
+        wp_die(__('You do not have sufficient permissions to access this page.'));
+    }
+
+    include('admin/dashboard/index.php');
 }
 
 function tml_plugin_action_links($links, $file) {
