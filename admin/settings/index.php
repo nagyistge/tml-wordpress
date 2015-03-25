@@ -118,6 +118,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
         <hr />
 
+        <p style="padding-left:10px; color:#888;">
+            To get your project token, visit your <a href="https://dashboard.translationexchange.com">Translation Exchange Dashboard</a> and choose <strong>Integration Section</strong> from the navigation menu.
+        </p>
+
         <form name="form1" method="post" action="">
             <input type="hidden" name="<?php echo $cache_field_name; ?>" id="<?php echo $cache_field_name; ?>" value="N">
             <input type="hidden" name="<?php echo $submit_field_name; ?>" id="<?php echo $submit_field_name; ?>" value="Y">
@@ -181,7 +185,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             <h2>
                 <?php echo __( 'Translation Cache Settings' ); ?>
             </h2>
-            <div style="color: #888">
+
+            <hr />
+
+            <div style="padding-left:10px; color: #888">
                 <?php echo(__("For better performance, you should cache all your translations locally.")) ?>
                 <a href="http://welcome.translationexchange.com/docs/plugins/wordpress" target="_new">Click here</a> to learn more about cache options.
             </div>
@@ -190,7 +197,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                 <input type="hidden" name="action" id="cache_action" value="download_cache">
                 <input type="hidden" name="version" id="cache_version" value="">
 
-                <hr />
 
                 <table style="margin-top: 10px; width: 100%">
                     <tr>
@@ -304,7 +310,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
 
             <div style="color: #888">
-                <?php echo __("Don't forget to configure the Language Selector widget under Appearance > Widgets."); ?>
+                <?php echo __("Don't forget to configure the <strong>Language Selector widget</strong> under Appearance > Widgets."); ?>
             </div>
         <?php } ?>
     </div>
