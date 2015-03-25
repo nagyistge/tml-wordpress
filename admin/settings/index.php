@@ -151,9 +151,18 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
                     </td>
                     <td style="padding-top:20px;padding-bottom:40px;">
-                        <button class="button-primary" style="margin-right:15px;">
+                        <button class="button-primary">
                             <?php echo __('Save Changes') ?>
                         </button>
+
+                        <a class="button" href='https://dashboard.translationexchange.com'>
+                            <?php echo __('Visit Your Dashboard') ?>
+                        </a>
+
+                        <a class="button" href='https://translation-center.translationexchange.com'>
+                            <?php echo __('Visit Translation Center') ?>
+                        </a>
+
                     </td>
                 </tr>
             </table>
@@ -172,7 +181,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
                 <table style="margin-top: 10px; width: 100%">
                     <tr>
-                        <td style="width:100px; padding:10px; vertical-align: top;">Local Cache:</td>
+                        <td style="width:100px; padding:10px; vertical-align: top;"><?php echo __("Cache Options:") ?></td>
                         <td style="padding:10px; vertical-align: top;">
                             <?php
                                 $folders = array_reverse(scandir(get_option('tml_cache_path')));
@@ -187,58 +196,76 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                                     $snapshot['path'] = $path;
                                     array_push($snapshots, $snapshot);
                                 }
+                            ?>
+                                <div style="border: 1px solid #ccc; width: 600px; margin-bottom: 10px;">
+                                    <div style="background:#fefefe; padding: 5px; ">
+                                        <div style="float:right; color:#888;">
+                                            <?php
+                                                if (get_option("tml_cache_version") == "0") {
+                                                    echo "<strong>" . __("current") . "</strong>";
+                                                } else {
+                                                    ?> <a href="#" onclick="useCache('0')" style="text-decoration: none"><?php echo __("use") ?></a> <?php
+                                                }
+                                            ?>
+                                        </div>
 
-                                if (count($snapshots) == 0) {
-                                    update_option("tml_cache_version", '0');
-                                    echo "no snapshots available";
-                                } else {
-                                    foreach ($snapshots as $snapshot) {
+                                        <?php
+                                            if (get_option("tml_cache_version") == "0") {
+                                                echo "<strong>" . __("No cache - get data directly from the service, slower") . "</strong>";
+                                            } else {
+                                                echo "<span style='color: #888;'>" . __("No cache - get data directly from the service, slower") . "</span>";
+                                            }
                                         ?>
-                                            <div style="border: 1px solid #ccc; width: 600px; margin-bottom: 10px;">
-                                                <div style="background:#fefefe; padding: 5px; border-bottom: 1px solid #ccc;">
-                                                    <div style="float:right; color:#888;">
-                                                        <?php
-                                                        if ($snapshot['version'] === get_option("tml_cache_version")) {
-                                                           echo "<strong>current</strong>";
-                                                        } else {
-                                                            ?> <a href="#" onclick="useCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none">use</a> <?php
-                                                        }
-                                                        ?>
-                                                        <span style="color:#ccc;">|</span>
-                                                        <a href="#" onclick="deleteCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none">remove</a>
-                                                    </div>
+                                    </div>
+                                </div>
 
+                            <?php
+                                foreach ($snapshots as $snapshot) {
+                                    ?>
+                                        <div style="border: 1px solid #ccc; width: 600px; margin-bottom: 10px;">
+                                            <div style="background:#fefefe; padding: 5px; border-bottom: 1px solid #ccc;">
+                                                <div style="float:right; color:#888;">
                                                     <?php
-                                                        if ($snapshot['version'] === get_option("tml_cache_version")) {
-                                                            echo "<strong>Generated On: " . $snapshot['created_at'] . "</strong>";
-                                                        } else {
-                                                            echo "<span style='color: #888;'>Generated On: " . $snapshot['created_at'] . "</span>";
-                                                        }
+                                                    if ($snapshot['version'] === get_option("tml_cache_version")) {
+                                                       echo "<strong>" . __("current") . "</strong>";
+                                                    } else {
+                                                        ?> <a href="#" onclick="useCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none"><?php echo __("use") ?></a> <?php
+                                                    }
                                                     ?>
+                                                    <span style="color:#ccc;">|</span>
+                                                    <a href="#" onclick="deleteCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none"><?php echo __("remove") ?></a>
                                                 </div>
-                                                <div style="padding: 5px;">
-                                                    <table style="width:100%; font-size:12px;" cellspacing="0" cellpadding="0">
-                                                        <tr>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Languages</td>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Phrases</td>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Translations</td>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;">Translated</td>
-                                                            <td style="padding:3px; width: 20%; color: #888;">Approved</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['language_count']; ?></td>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['key_count']; ?></td>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['translation_count']; ?></td>
-                                                            <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['percent_translated']; ?>%</td>
-                                                            <td style="padding:3px;"><?php echo $snapshot['metrics']['percent_locked']; ?>%</td>
-                                                        </tr>
-                                                    </table>
-                                                    <!-- ?php var_dump($snapshot['metrics']) ? -->
-                                                </div>
-                                            </div>
 
-                                    <?php
-                                    }
+                                                <?php
+                                                    if ($snapshot['version'] === get_option("tml_cache_version")) {
+                                                        echo "<strong>" . __("Generated On:") . " " . $snapshot['created_at'] . "</strong>";
+                                                    } else {
+                                                        echo "<span style='color: #888;'>" . __("Generated On:") . " " . $snapshot['created_at'] . "</span>";
+                                                    }
+                                                ?>
+                                            </div>
+                                            <div style="padding: 5px;">
+                                                <table style="width:100%; font-size:12px;" cellspacing="0" cellpadding="0">
+                                                    <tr>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Languages") ?></td>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Phrases") ?></td>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Translations") ?></td>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Translated") ?></td>
+                                                        <td style="padding:3px; width: 20%; color: #888;"><?php echo __("Approved") ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['language_count']; ?></td>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['key_count']; ?></td>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['translation_count']; ?></td>
+                                                        <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['percent_translated']; ?>%</td>
+                                                        <td style="padding:3px;"><?php echo $snapshot['metrics']['percent_locked']; ?>%</td>
+                                                    </tr>
+                                                </table>
+                                                <!-- ?php var_dump($snapshot['metrics']) ? -->
+                                            </div>
+                                        </div>
+
+                                <?php
                                 }
                             ?>
                         </td>
