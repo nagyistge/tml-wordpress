@@ -63,7 +63,7 @@ class LanguageSelectorWidget extends WP_Widget {
                 <option value="dropdown" <?php if ($style == 'dropdown') echo 'selected'; ?>>Dropdown</option>
                 <option value="popup" <?php if ($style == 'popup') echo 'selected'; ?>>Popup</option>
                 <option value="flags" <?php if ($style == 'flags') echo 'selected'; ?>>Flags</option>
-                <option value="custom" <?php if ($style == 'custom') echo 'selected'; ?>>Custom</option>
+<!--                <option value="custom" --><?php //if ($style == 'custom') echo 'selected'; ?><!-->Custom</option>-->
             </select>
 
             <input type="checkbox"
