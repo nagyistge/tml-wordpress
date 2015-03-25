@@ -4,7 +4,7 @@
   Plugin URI: http://wordpress.org/plugins/translationexchange/
   Description: Translate your WordPress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.2.4
+  Version: 0.2.5
   Author URI: http://translationexchange.com/
   License: MIT (http://opensource.org/licenses/MIT)
  */

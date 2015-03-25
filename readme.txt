@@ -1,9 +1,9 @@
 === Translation Exchange - Translate Your WordPress Site Today! ===
 Contributors: translationx
-Tags: tml, localization, localize, localisation, localise, translate, translation, translator, translations, l10n, i18n, tr8n, language, switch, change, switcher
+Tags: translationexchange, translation exchange, translation, exchange, tml, localization, localize, localisation, localise, translate,  translator, translations, l10n, i18n, tr8n, language, switch, select, selector, change, switcher
 Requires at least: 3.0
 Tested up to: 4.1.1
-Stable tag: 0.5
+Stable tag: 0.2.5
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
