@@ -19,47 +19,54 @@ if (isset($_POST['action']) && $_POST['action'] == 'use_cache') {
 
 if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
     echo "<p>Downloading latest cache snapshot from Translation Exchange.... </p>";
+    try {
+        $snapshot = file_get_contents(get_option('tml_host') . "/v1/snapshots/current?access_token=" . get_option('tml_token'));
+        $snapshot = json_decode($snapshot, true);
 
-    $snapshot = file_get_contents(get_option('tml_host') . "/v1/snapshots/current?access_token=" . get_option('tml_token'));
-    $snapshot = json_decode($snapshot, true);
-
-    if (isset($snapshot['status']) && $snapshot['status'] == 'none') {
-        echo "<p>You current don't have any snapshots.</p>";
-        echo "<p>To generate a snapshot, please visit your <a href='https://dashboard.translationexchange.com'>Translation Exchange Dashboard</a>, choose <strong>Snapshots</strong> section and click on <strong>Generate Snapshot</strong> button.</p>";
-    } else {
-        $data = file_get_contents($snapshot['url']);
-        $version_path = get_option('tml_cache_path') . "/" . $snapshot['version'];
-        $file_path = $version_path . ".tar.gz";
-
-        try {
-            $result = file_put_contents($file_path, $data);
-        } catch (Exception $e) {
-            $result = false;
+        if (!$snapshot) {
+            throw new Exception("Failed to download snapshot");
         }
 
-        if (!$result) {
-            echo "<p>Failed to store snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions.</p>";
+        if (isset($snapshot['status']) && $snapshot['status'] == 'none') {
+            echo "<p>You current don't have any snapshots.</p>";
+            echo "<p>To generate a snapshot, please visit your <a href='https://dashboard.translationexchange.com'>your dashboard</a>, choose <strong>Snapshots</strong> section and click on <strong>Generate Snapshot</strong> button.</p>";
         } else {
-            echo "<p>Downloaded version <strong>" . $snapshot['version'] . "</strong> ($result bytes). Extracting content...</p>";
-            echo "<p>Summary: " . $snapshot['metrics']['language_count'] . " languages, " . $snapshot['metrics']['key_count'] . " phrases, " . $snapshot['metrics']['translation_count'] . " translations </p>";
-            echo "<p>Extracting content...</p>";
+            $data = file_get_contents($snapshot['url']);
+            $version_path = get_option('tml_cache_path') . "/" . $snapshot['version'];
+            $file_path = $version_path . ".tar.gz";
+
             try {
-                $phar = new PharData($file_path);
-                FileUtils::rrmdir($version_path);
-                $phar->extractTo($version_path);
-                unlink($file_path);
-                $result = true;
+                $result = file_put_contents($file_path, $data);
             } catch (Exception $e) {
                 $result = false;
             }
 
-            if ($result) {
-                update_option("tml_cache_version", $snapshot['version']);
-                echo "<p>Snapshot has been extracted and is ready for use.</p>";
+            if (!$result) {
+                echo "<p>Failed to store snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions.</p>";
             } else {
-                echo "<p>Failed to extract snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions and has enough space..</p>";
+                echo "<p>Downloaded version <strong>" . $snapshot['version'] . "</strong> ($result bytes). Extracting content...</p>";
+                echo "<p>Summary: " . $snapshot['metrics']['language_count'] . " languages, " . $snapshot['metrics']['key_count'] . " phrases, " . $snapshot['metrics']['translation_count'] . " translations </p>";
+                echo "<p>Extracting content...</p>";
+                try {
+                    $phar = new PharData($file_path);
+                    FileUtils::rrmdir($version_path);
+                    $phar->extractTo($version_path);
+                    unlink($file_path);
+                    $result = true;
+                } catch (Exception $e) {
+                    $result = false;
+                }
+
+                if ($result) {
+                    update_option("tml_cache_version", $snapshot['version']);
+                    echo "<p>Snapshot has been extracted and is ready for use.</p>";
+                } else {
+                    echo "<p>Failed to extract snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions and has enough space..</p>";
+                }
             }
         }
+    } catch (Exception $e) {
+        echo "<p>We were unable to download the latest snapshot. Please ensure that you are using a correct access token, and you have a write permission to the cache folder.</p>";
     }
 
 } else { // snapshot generation end
@@ -93,6 +100,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             $translation_fields[$key] = array_merge($attributes, array("value" => $value));
         }
         ?>
+
         <div class="updated"><p><strong><?php _e('Settings have been saved.'); ?></strong></p></div>
     <?php
     }
@@ -146,6 +154,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                     <td colspan="2"><hr /></td>
                 </tr>
             <?php } ?>
+
                 <tr>
                     <td>
 
@@ -168,15 +177,19 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             </table>
         </form>
 
-        <h2>
-            <?php echo __( 'Translation Cache Settings' ); ?>
-        </h2>
+        <?php if (get_option("tml_token") != "") { ?>
+            <h2>
+                <?php echo __( 'Translation Cache Settings' ); ?>
+            </h2>
+            <div style="color: #888">
+                <?php echo(__("For better performance, you should cache all your translations locally.")) ?>
+                <a href="http://welcome.translationexchange.com/docs/plugins/wordpress" target="_new">Click here</a> to learn more about cache options.
+            </div>
 
-        <form id="cache_form" method="post" action="">
-            <input type="hidden" name="action" id="cache_action" value="download_cache">
-            <input type="hidden" name="version" id="cache_version" value="">
+            <form id="cache_form" method="post" action="">
+                <input type="hidden" name="action" id="cache_action" value="download_cache">
+                <input type="hidden" name="version" id="cache_version" value="">
 
-            <?php if (get_option("tml_token") != "") { ?>
                 <hr />
 
                 <table style="margin-top: 10px; width: 100%">
@@ -210,11 +223,13 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                                         </div>
 
                                         <?php
-                                            if (get_option("tml_cache_version") == "0") {
-                                                echo "<strong>" . __("No cache - get data directly from the service, slower") . "</strong>";
-                                            } else {
-                                                echo "<span style='color: #888;'>" . __("No cache - get data directly from the service, slower") . "</span>";
-                                            }
+                                            if (get_option("tml_cache_version") == "0")
+                                                echo "<strong>";
+
+                                            echo __("No local cache - data is requested directly from the service, slow");
+
+                                            if (get_option("tml_cache_version") == "0")
+                                                echo "</strong>";
                                         ?>
                                     </div>
                                 </div>
@@ -285,10 +300,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                         </td>
                     </tr>
                 </table>
-            <?php } ?>
-        </form>
+            </form>
 
+
+            <div style="color: #888">
+                <?php echo __("Don't forget to configure the Language Selector widget under Appearance > Widgets."); ?>
+            </div>
+        <?php } ?>
     </div>
+
 
     <script>
         function resetBrowserCache() {

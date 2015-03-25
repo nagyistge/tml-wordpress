@@ -4,7 +4,7 @@
   Plugin URI: http://wordpress.org/plugins/translationexchange/
   Description: Translate your WordPress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.2.1
+  Version: 0.2.4
   Author URI: http://translationexchange.com/
   License: MIT (http://opensource.org/licenses/MIT)
  */
@@ -42,6 +42,8 @@
 
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
+
+define( 'TML_DEBUG', false );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -264,9 +266,12 @@ function tml_enqueue_scripts() {
             "shortcuts" => (tml_application()->isFeatureEnabled("shortcuts") ? tml_application()->shortcuts : null)
         ));
     } else if (get_option('tml_mode') == "client") {
-//        wp_register_script('tml_js', ( '//localhost:8080/tml.js' ), false, null, false);
-        wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
-        wp_register_script('tml_init', plugins_url('/assets/javascripts/init_client.js', __FILE__) , false, null, true);
+        if (TML_DEBUG)
+            wp_register_script('tml_js', ( '//localhost:8080/tml.js' ), false, null, false);
+        else
+            wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
+
+        wp_register_script('tml_init', plugins_url('/assets/javascripts/init_client.js', __FILE__) , false, null, false);
         wp_enqueue_script('tml_js');
         wp_enqueue_script('tml_init');
         $options = array(

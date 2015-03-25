@@ -1,7 +1,7 @@
 if (TmlConfig && TmlConfig.token) {
     var options = {
         host: TmlConfig.host,
-        element: document.body,
+        translateBody: true,
         cdn: false
     };
 
