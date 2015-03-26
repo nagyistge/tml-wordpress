@@ -232,13 +232,19 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                                             if (get_option("tml_cache_version") == "0")
                                                 echo "<strong>";
 
-                                            echo __("No local cache - data is requested directly from the service, slow");
+                                            echo __("No local cache - data is requested directly from the service");
 
                                             if (get_option("tml_cache_version") == "0")
                                                 echo "</strong>";
                                         ?>
                                     </div>
                                 </div>
+
+                            <?php if (count($snapshots) === 0) { ?>
+                                <div style="color:#888">
+                                    You have not downloaded any snapshots yet.
+                                </div>
+                            <?php } ?>
 
                             <?php
                                 foreach ($snapshots as $snapshot) {
