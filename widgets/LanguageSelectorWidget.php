@@ -43,6 +43,7 @@ class LanguageSelectorWidget extends WP_Widget {
         $style = ! empty( $instance['style'] ) ? $instance['style'] : 'dropdown';
         $toggle_flag = ! isset( $instance['toggle_flag'] ) ? "true" : $instance['toggle_flag'];
         $toggle_label = ! empty( $instance['toggle_label'] ) ? $instance['toggle_label'] : __( 'Help Us Translate', 'text_domain' );
+        $powered_by_flag = ! isset( $instance['powered_by_flag'] ) ? "true" : $instance['powered_by_flag'];
         ?>
         <p>
             <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
@@ -79,6 +80,14 @@ class LanguageSelectorWidget extends WP_Widget {
                    type="text"
                    style="margin-top: 5px; margin-bottom: 10px;"
                    value="<?php echo esc_attr( $toggle_label ); ?>">
+
+            <input type="checkbox"
+                    <?php if ($powered_by_flag == "true") echo 'checked'; ?>
+                   value="true"
+                   id="<?php echo $this->get_field_id( 'powered_by_flag' ); ?>"
+                   name="<?php echo $this->get_field_name( 'powered_by_flag' ); ?>">
+            <label for="<?php echo $this->get_field_id( 'powered_by_flag' ); ?>"><?php _e( "Show 'Powered By Translation Exchange'" ); ?></label>
+
         </p>
     <?php
     }
@@ -89,6 +98,7 @@ class LanguageSelectorWidget extends WP_Widget {
         $instance['style'] = ( ! empty( $new_instance['style'] ) ) ? strip_tags( $new_instance['style'] ) : '';
         $instance['toggle_flag'] = ( ! empty( $new_instance['toggle_flag'] ) ) ? strip_tags( $new_instance['toggle_flag'] ) : 'false';
         $instance['toggle_label'] = ( ! empty( $new_instance['toggle_label'] ) ) ? strip_tags( $new_instance['toggle_label'] ) : '';
+        $instance['powered_by_flag'] = ( ! empty( $new_instance['powered_by_flag'] ) ) ? strip_tags( $new_instance['powered_by_flag'] ) : 'false';
         return $instance;
     }
 
@@ -97,6 +107,7 @@ class LanguageSelectorWidget extends WP_Widget {
         $style = ! empty( $instance['style'] ) ? $instance['style'] : 'dropdown';
         $toggle_flag = ! isset( $instance['toggle_flag'] ) ? "true" : $instance['toggle_flag'];
         $toggle_label = ! empty( $instance['toggle_label'] ) ? $instance['toggle_label'] : __( 'Help Us Translate', 'text_domain' );
+        $powered_by_flag = ! isset( $instance['powered_by_flag'] ) ? "true" : $instance['powered_by_flag'];
 
         if (get_option("tml_mode") == 'client') {
             ?>
@@ -104,7 +115,10 @@ class LanguageSelectorWidget extends WP_Widget {
                 <h3><?php echo $title; ?></h3>
                 <div style="border:0px solid #ccc; margin-bottom:15px; margin-top:5px;">
                     <div data-tml-language-selector='<?php echo $style; ?>'
-                         <?php if ($toggle_flag == "true") { ?>
+                        <?php if ($powered_by_flag == "true") { ?>
+                                data-tml-powered-by='<?php echo $powered_by_flag; ?>'
+                        <?php } ?>
+                        <?php if ($toggle_flag == "true") { ?>
                             data-tml-toggle='<?php echo $toggle_flag; ?>'
                             data-tml-toggle-label='<?php echo $toggle_label; ?>'
                          <?php } ?>
@@ -129,7 +143,7 @@ class LanguageSelectorWidget extends WP_Widget {
         <aside id="meta-2" class="widget widget_meta masonry-brick" style="">
         <h3><?php echo $title; ?></h3>
         <div style="border:0px solid #ccc; margin-bottom:15px; margin-top:5px;">
-            <?php tml_language_selector_tag($style, array("toggle" => $toggle_flag, "toggle_label" => $toggle_label)); ?>
+            <?php tml_language_selector_tag($style, array("toggle" => $toggle_flag, "toggle_label" => $toggle_label, "powered_by" => $powered_by_flag)); ?>
         </div>
         </aside>
 

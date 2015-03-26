@@ -43,7 +43,7 @@
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 
-define( 'TML_DEBUG', false );
+define( 'TML_DEBUG', true );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
