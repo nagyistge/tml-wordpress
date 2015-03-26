@@ -25,12 +25,12 @@ Translate your WordPress into any number of languages with minimal amount of eff
 
 == Installation ==
 
-1) Visit welcome.translationexchange.com and [sign up for a free account](https://dashboard.translationexchange.com/signup)
-2) Create a new project and copy your project key.
-3) Install this plugin and open the settings page from the admin menu.
-4) Paste your project key and save the settings.
-5) Add Language Selector widget from "Appearance > Widgets" section.
-6) Visit your site and see it in other languages.
+* Visit welcome.translationexchange.com and [sign up for a free account](https://dashboard.translationexchange.com/signup)
+* Create a new project and copy your project key.
+* Install this plugin and open the settings page from the admin menu.
+* Paste your project key and save the settings.
+* Add Language Selector widget from "Appearance > Widgets" section.
+* Visit your site and see it in other languages.
 
 = Minimum Requirements =
 * WordPress 3.0 or greater
