@@ -51,8 +51,8 @@ Our documentation is constantly updated with the latest FAQs.
 == Screenshots ==
 
 1. Translation Exchange Settings
-![Settings]()
-
+1. Language Selector Widget
+1. In-Context Translator
 
 == Changelog ==
 
