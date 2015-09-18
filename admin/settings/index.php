@@ -38,6 +38,10 @@ if (!current_user_can('manage_options')) {
     wp_die('You do not have sufficient permissions to access this page.');
 }
 
+if (isset($_POST['action']) && $_POST['action'] == 'sync_cache') {
+    Cache::invalidateVersion();
+}
+
 if (isset($_POST['action']) && $_POST['action'] == 'delete_cache') {
     $version_path = get_option('tml_cache_path') . "/" . $_POST['version'];
     FileUtils::rrmdir($version_path);
@@ -359,6 +363,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                                                 <td></td>
                                                 <td style="">
                                                     <a href='#' id='tml_edit_dynamic_cache_button' class='button' style='margin-top:5px;' onClick="editDynamicCache()"><?php echo __('Edit Settings') ?></a>
+                                                    <a href='#' id='tml_reset_dynamic_cache_button' class='button' style='margin-top:5px;' onClick="syncDynamicCache()"><?php echo __('Update to Current Version') ?></a>
                                                     <a href='#' id='tml_save_dynamic_cache_button' class='button' style='margin-top:5px;display:none;' onClick="saveDynamicCache()"><?php echo __('Save') ?></a>
                                                     <a href='#' id='tml_cancel_dynamic_cache_button' class='button' style='margin-top:5px;display:none;' onClick="cancelDynamicCacheEdit()"><?php echo __('Cancel') ?></a>
                                                 </td>
@@ -466,6 +471,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             document.getElementById("tml_cache_port").disabled = false;
 
             document.getElementById("tml_edit_dynamic_cache_button").style.display = 'none';
+            document.getElementById("tml_reset_dynamic_cache_button").style.display = 'none';
             document.getElementById("tml_save_dynamic_cache_button").style.display = 'inline';
             document.getElementById("tml_cancel_dynamic_cache_button").style.display = 'inline';
         }
@@ -487,6 +493,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             document.getElementById("tml_cache_port").disabled = true;
 
             document.getElementById("tml_edit_dynamic_cache_button").style.display = 'inline';
+            document.getElementById("tml_reset_dynamic_cache_button").style.display = 'inline';
             document.getElementById("tml_save_dynamic_cache_button").style.display = 'none';
             document.getElementById("tml_cancel_dynamic_cache_button").style.display = 'none';
         }
@@ -526,6 +533,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             document.getElementById("cache_form").submit();
         }
 
+        function syncDynamicCache() {
+            jQuery("#cache_action").val("sync_cache");
+            document.getElementById("cache_form").submit();
+        }
     </script>
 
 <?php } ?>
