@@ -2,7 +2,7 @@
 /*
   Plugin Name: Translation Exchange
   Plugin URI: http://wordpress.org/plugins/translationexchange/
-  Description: Translate your WordPress site into any language in minutes.
+  Description: Translate your Wordpress site into any language in minutes.
   Author: Translation Exchange, Inc
   Version: 0.3.1
   Author URI: https://translationexchange.com/
