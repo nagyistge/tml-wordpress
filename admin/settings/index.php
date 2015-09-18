@@ -90,7 +90,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
             if (!$result) {
                 echo "<p>Failed to download and store snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions.</p>";
             } else {
-                echo "<p>Downloaded version <strong>" . $snapshot['version'] . "</strong> ($result bytes). Extracting content...</p>";
+                echo "<p>Downloaded version <strong>" . $snapshot['version'] . "</strong> ($result bytes).</p>";
                 echo "<p>Summary: " . $snapshot['metrics']['language_count'] . " languages, " . $snapshot['metrics']['key_count'] . " phrases, " . $snapshot['metrics']['translation_count'] . " translations </p>";
                 echo "<p>Extracting content...</p>";
                 try {
@@ -186,8 +186,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
                     <?php $type = (!isset($field['type']) ? 'text' : $field['type']); ?>
                     <?php $style = (!isset($field['style']) ? '' : $field['style']); ?>
                     <tr style="<?php echo($style) ?>">
-                        <td style="width:100px; padding:10px;"><?php echo($field["title"]) ?></td>
-                        <td style="padding:10px;">
+                        <td style="width:100px; padding:2px 10px;"><?php echo($field["title"]) ?></td>
+                        <td style="padding:2px 10px;">
                             <?php if ($type == 'text') {  ?>
                                 <input type="text" name="<?php echo($key) ?>" value="<?php echo($field["value"]) ?>" placeholder="<?php echo($field["default"]) ?>"  style="width:700px">
                             <?php } else if ($type == 'radio' && isset($field["options"])) { ?>
