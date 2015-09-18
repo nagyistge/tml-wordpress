@@ -4,8 +4,8 @@
   Plugin URI: http://wordpress.org/plugins/translationexchange/
   Description: Translate your WordPress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.2.5
-  Author URI: http://translationexchange.com/
+  Version: 0.3.1
+  Author URI: https://translationexchange.com/
   License: GPLv2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  */
 
@@ -42,22 +42,23 @@
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 
-define( 'TML_DEBUG', true );
+define( 'TML_DEBUG', false );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 add_option('tml_mode', 'client');
 
+add_option('tml_cache_type', 'none');
 add_option('tml_cache_version', '0');
 //update_option('tml_cache_version', '0');
 
-add_option('tml_host', 'https://api.translationexchange.com');
-update_option('tml_host', 'https://api.translationexchange.com');
+add_option('tml_host', 'https://staging-api.translationexchange.com');
+update_option('tml_host', 'https://staging-api.translationexchange.com');
 // update_option('tml_host', 'http://0.0.0.0:3000');
 
 add_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 
-require_once(dirname(__FILE__).'/tml/library/tml.php');
+require_once(dirname(__FILE__).'/tml/src/init.php');
 
 use tml\Config;
 use tml\Logger;
@@ -66,18 +67,40 @@ use tml\utils\ArrayUtils;
 use tml\utils\StringUtils;
 
 if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "server_manual") {
-    if (get_option('tml_cache_version') == '0') {
-        Config::instance()->initCache(array("enabled" => false));
+    $tml_cache = null;
+
+    if (get_option('tml_cache_type') == 'dynamic') {
+        $tml_cache = array(
+            "enabled"   => true,
+            "adapter"   => get_option('tml_cache_adapter'),
+            "host"      => get_option('tml_cache_host'),
+            "port"      => get_option('tml_cache_port')
+        );
+    } elseif (get_option('tml_cache_type') == 'local') {
+        $tml_cache = array(
+            "enabled"   => true,
+            "adapter"   => "file",
+            "path"      => get_option('tml_cache_path'),
+            "version"   => get_option('tml_cache_version', 1)
+        );
     } else {
-        Config::instance()->initCache(array(
-            "enabled" => true,
-            "adapter" => "file",
-            "path" => get_option('tml_cache_path'),
-            "version" => get_option('tml_cache_version', 1)
-        ));
+        $tml_cache = array(
+            "enabled"   => false,
+            "adapter"   => "file"
+        );
     }
 
-    tml_init(get_option('tml_token'), get_option('tml_host'));
+    tml_init(array(
+        "key"   => get_option('tml_key'),
+        "token" => get_option('tml_token'),
+        "host"  => get_option('tml_host'),
+        "log"   => array(
+            "enabled"   => true,
+            "severity"  => "debug",
+            "path"      => "/Users/Berk/Projects/PHP/wordpress/log/tml.log"
+        ),
+        "cache" => $tml_cache
+    ));
 }
 
 if (Config::instance()->isEnabled()) {
@@ -268,22 +291,23 @@ function tml_enqueue_scripts() {
         if (TML_DEBUG)
             wp_register_script('tml_js', ( '//localhost:8080/tml.js' ), false, null, false);
         else
-            wp_register_script('tml_js', ( '//cdn.translationexchange.com/tml.js' ), false, null, false);
+            wp_register_script('tml_js', ( '//cdn.translationexchange.com/tools/tml/stable/tml.js' ), false, null, false);
 
         wp_register_script('tml_init', plugins_url('/assets/javascripts/init_client.js', __FILE__) , false, null, false);
         wp_enqueue_script('tml_js');
         wp_enqueue_script('tml_init');
         $options = array(
             "host" => get_option('tml_host'),
+            "key" => get_option('tml_key'),
             "token" => get_option('tml_token')
         );
 
-        if (get_option("tml_cache_version") != '0') {
-            $options['cache'] = array(
-                "path" => plugins_url("translationexchange/cache/" . get_option("tml_cache_version")),
-                "version" => get_option('tml_cache_version')
-            );
-        }
+//        if (get_option("tml_cache_version") != '0') {
+//            $options['cache'] = array(
+//                "path" => plugins_url("translationexchange/cache/" . get_option("tml_cache_version")),
+//                "version" => get_option('tml_cache_version')
+//            );
+//        }
 
         wp_localize_script('tml_init', 'TmlConfig', $options);
     }
