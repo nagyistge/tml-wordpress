@@ -244,7 +244,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
             <div style="padding-left:10px; color: #888">
                 <?php echo(__("For better performance, your translations should be cached.")) ?>
-                <a href="http://welcome.translationexchange.com/docs/plugins/wordpress" target="_new">Click here</a> to learn more about cache options.
+                <a href="https://translationexchange.com/docs/plugins/wordpress" target="_new">Click here</a> to learn more about cache options.
             </div>
 
             <form id="cache_form" method="post" action="">
