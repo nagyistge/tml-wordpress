@@ -1,9 +1,11 @@
 if (TmlConfig && TmlConfig.token) {
     var options = {
-        host:   TmlConfig.host,
-        key:    TmlConfig.key,
-        token:  TmlConfig.token,
-        translateBody: true,
+        host:           TmlConfig.host,
+        key:            TmlConfig.key,
+        token:          TmlConfig.token,
+        translateTitle: true,
+        translateBody:  true,
+        debug:          false,
         agent: {
             enabled: true,
             type: 'tools',

@@ -36,7 +36,7 @@ function tml_add_script(doc, id, src, onload) {
         tml_add_css(window.document, TmlConfig.stylesheet, false);
         tml_add_css(window.document, TmlConfig.css, true);
 
-        tml_add_script(window.document, 'tml-jssdk', TmlConfig.javascript, function() {
+        tml_add_script(window.document, 'tml-tools', TmlConfig.javascript, function() {
             Tml.app_key = TmlConfig.key;
             Tml.host = TmlConfig.tools;
             Tml.default_locale = TmlConfig.default_locale;

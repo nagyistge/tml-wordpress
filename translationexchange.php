@@ -52,8 +52,8 @@ add_option('tml_cache_type', 'none');
 add_option('tml_cache_version', '0');
 //update_option('tml_cache_version', '0');
 
-add_option('tml_host', 'https://staging-api.translationexchange.com');
-update_option('tml_host', 'https://staging-api.translationexchange.com');
+add_option('tml_host', 'https://api.translationexchange.com');
+update_option('tml_host', 'https://api.translationexchange.com');
 // update_option('tml_host', 'http://0.0.0.0:3000');
 
 add_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
@@ -95,9 +95,9 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
         "token" => get_option('tml_token'),
         "host"  => get_option('tml_host'),
         "log"   => array(
-            "enabled"   => true,
+            "enabled"   => false,
             "severity"  => "debug",
-            "path"      => "/Users/Berk/Projects/PHP/wordpress/log/tml.log"
+            "path"      => "./log/tml.log"
         ),
         "cache" => $tml_cache
     ));
@@ -302,12 +302,12 @@ function tml_enqueue_scripts() {
             "token" => get_option('tml_token')
         );
 
-//        if (get_option("tml_cache_version") != '0') {
-//            $options['cache'] = array(
-//                "path" => plugins_url("translationexchange/cache/" . get_option("tml_cache_version")),
-//                "version" => get_option('tml_cache_version')
-//            );
-//        }
+        if (get_option("tml_cache_type")=="local" && get_option("tml_cache_version") != '0') {
+            $options['cache'] = array(
+                "path" => plugins_url("translation-exchange/cache"),
+                "version" => get_option('tml_cache_version')
+            );
+        }
 
         wp_localize_script('tml_init', 'TmlConfig', $options);
     }

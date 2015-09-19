@@ -40,6 +40,7 @@ if (!current_user_can('manage_options')) {
 
 if (isset($_POST['action']) && $_POST['action'] == 'sync_cache') {
     Cache::invalidateVersion();
+    echo "<div class='updated'><p><strong>" .  __('Cache version has been updated to the current release version from Translation Exchange.') . "</strong></p></div>";
 }
 
 if (isset($_POST['action']) && $_POST['action'] == 'delete_cache') {
@@ -125,8 +126,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
     $application_fields = array(
         'tml_host' => array("title" => __('Host:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com", "style" => "display:none"),
-        'tml_key' => array("title" => __('Project Key:'), "value" => get_option('tml_key'), "default" => ""),
-        'tml_token' => array("title" => __('Access Token:'), "value" => get_option('tml_token'), "default" => ""),
+        'tml_key' => array("title" => __('Project Key:'), "value" => get_option('tml_key'), "default" => "Paste your application key here"),
+        'tml_token' => array("title" => __('Access Token:'), "value" => get_option('tml_token'), "default" => "Paste your application token here"),
         'tml_mode' => array("title" => __('Mode:'), "value" => get_option('tml_mode'), "default" => "", "type" => "radio", "options" => array(
             array("title" => __('Client-side (using JavaScript)'), "value" => "client"),
             array("title" => __('Server-side (using PHP)'), "value" => "server_automated"),
@@ -534,6 +535,9 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
         }
 
         function syncDynamicCache() {
+            if (!confirm("<?php echo __("Are you sure you want to update your cache version to the current release version from Translation Exchange?") ?>"))
+                return false;
+
             jQuery("#cache_action").val("sync_cache");
             document.getElementById("cache_form").submit();
         }
