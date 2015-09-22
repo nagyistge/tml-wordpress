@@ -11,7 +11,7 @@ This plugin uses Tml PHP Client SDK to enable inline translations of WordPress p
 Documentation
 ==================
 
-Please visit http://welcome.translationexchange.com/docs/plugins/wordpress for the documentation on how 
+Please visit https://translationexchange.com/docs/plugins/wordpress for the documentation on how 
 to install and configure the plugin.
 
 

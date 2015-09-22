@@ -3,7 +3,7 @@ Contributors: translationx
 Tags: translationexchange, translation exchange, translation, exchange, tml, localization, localize, localisation, localise, translate,  translator, translations, l10n, i18n, tr8n, language, switch, select, selector, change, switcher
 Requires at least: 3.0
 Tested up to: 4.3.1
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -41,12 +41,12 @@ Translate your WordPress into any number of languages with minimal amount of eff
 == Frequently Asked Questions ==
 
 Our documentation is constantly updated with the latest FAQs. 
-[Click here](http://welcome.translationexchange.com/docs/plugins/wordpress) to view the documentation.
+[Click here](https://translationexchange.com/docs/plugins/wordpress) to view the documentation.
 
 == Upgrade Notice ==
 
 = 0.3.1 =
-* Please update your settings to include application key and token
+* Please update your settings to include application key and token.
 
 = 0.2.5 =
 * This is the initial release of the plugin.
@@ -58,6 +58,9 @@ Our documentation is constantly updated with the latest FAQs.
 1. In-Context Translator
 
 == Changelog ==
+
+= 0.3.2 =
+* Added configuration for advanced options
 
 = 0.3.1 =
 * Added dynamic cache support

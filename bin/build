@@ -3,6 +3,6 @@
 rm dist/translationexchange.zip
 sudo mv cache cache_backup
 mkdir cache
-zip -r dist/translationexchange-0.3.1.zip translationexchange.php readme.txt admin assets cache widgets tml/config tml/src tml/MIT-LICENSE
+zip -r dist/translationexchange-0.3.1.zip translationexchange.php readme.txt assets cache src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE
 rmdir cache
 sudo mv cache_backup cache

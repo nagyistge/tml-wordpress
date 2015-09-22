@@ -119,7 +119,7 @@ class LanguageSelectorWidget extends WP_Widget {
         if (get_option("tml_mode") == 'client') {
             ?>
                 <aside id="meta-2" class="widget widget_meta masonry-brick" style="">
-                <h3><?php echo $title; ?></h3>
+                <h4><?php echo $title; ?></h4>
                 <div style="border:0px solid #ccc; margin-bottom:15px; margin-top:5px;">
                     <div data-tml-language-selector='<?php echo $style; ?>'
                         <?php if ($powered_by_flag == "true") { ?>
@@ -137,7 +137,7 @@ class LanguageSelectorWidget extends WP_Widget {
         }
 
         if (Config::instance()->isDisabled()) {
-            echo '<h3>' . $title . '</h3>';
+            echo '<h4>' . $title . '</h4>';
             echo '<div style="border:0px solid #ccc; margin-bottom:15px; font-size:13px;">';
             echo __("Language Selector is currently disabled.") . " " . __("Please verify that you have properly configured your application key and secret: ") . " ";
             echo '<a href="' . get_bloginfo('url') . '/wp-admin/admin.php?page=tml-admin">' . __("Tml Settings") . '</a>';
@@ -148,7 +148,7 @@ class LanguageSelectorWidget extends WP_Widget {
         ?>
 
         <aside id="meta-2" class="widget widget_meta masonry-brick" style="">
-        <h3><?php echo $title; ?></h3>
+        <h4><?php echo $title; ?></h4>
         <div style="border:0px solid #ccc; margin-bottom:15px; margin-top:5px;">
             <?php tml_language_selector_tag($style, array("toggle" => $toggle_flag, "toggle_label" => $toggle_label, "powered_by" => $powered_by_flag)); ?>
         </div>
