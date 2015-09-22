@@ -108,7 +108,7 @@
 
     <?php if (get_option("tml_key") != "" && get_option("tml_token") != "") { ?>
 
-        <?php include_once "cache.php" ?>
+        <?php include_once dirname(__FILE__)."/cache.php" ?>
 
         <div style="color: #888">
             <?php echo __("Don't forget to configure the <strong>Language Selector widget</strong> under Appearance > Widgets."); ?>

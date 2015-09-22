@@ -65,7 +65,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'use_cache') {
 
 if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
-    include_once "releases.php";
+    include_once dirname(__FILE__)."/releases.php";
 
 } else { // snapshot generation end
 
@@ -111,6 +111,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
     // $field_sets = array($application_fields);
 
-    include_once "basics.php";
+    include_once dirname(__FILE__)."/basics.php";
 
 }
