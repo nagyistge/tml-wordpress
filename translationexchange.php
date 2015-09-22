@@ -89,13 +89,13 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
     }
 
     tml_init(array(
-        "key" => get_option('tml_key'),
-        "token" => get_option('tml_token'),
-        "host" => get_option('tml_host'),
-        "log" => array(
-            "enabled" => true,
-            "severity" => "debug",
-            "path" => "/Users/Berk/Projects/Tml/tml-wordpress/log/tml.log"
+        "key"       => get_option('tml_key'),
+        "token"     => get_option('tml_token'),
+        "host"      => get_option('tml_host'),
+        "log"       => array(
+            "enabled"   => false,
+            "severity"  => "debug",
+            "path"      => plugin_dir_path(__FILE__) . "/log/tml.log"
         ),
         "cache" => $tml_cache
     ));

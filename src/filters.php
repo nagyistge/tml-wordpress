@@ -39,7 +39,7 @@ use Tml\Config;
  * @return array|mixed
  * @throws Exception
  */
-function tml_title($title) {
+function tml_title_filter($title) {
     if (is_admin()) return $title;
     if (get_option('tml_mode') == "server_automated") {
         if ($title != strip_tags($title)) {
@@ -50,8 +50,8 @@ function tml_title($title) {
 
     return do_shortcode($title);
 }
-add_filter('the_title', 'tml_title', 10, 2);
-add_filter('wp_title', 'tml_title', 10, 2);
+add_filter('the_title', 'tml_title_filter', 10, 2);
+add_filter('wp_title', 'tml_title_filter', 10, 2);
 
 // function tml_wp_title_filter($title, $id) {
 //     return do_shortcode($title);
@@ -69,6 +69,13 @@ function tml_the_content_filter($content) {
     if (get_option('tml_mode') == "server_automated") {
         if (strstr($content, 'tml:manual') !== false)
             return $content;
+
+        $content = "<div data-tml-source='" . addslashes($GLOBALS['post']->post_name) . "'>" . $content ."</div>";
+
+//        if ($GLOBALS['post']->post_name == 'debug') {
+//            return var_export($GLOBALS['post'], TRUE );
+//        }
+
         return tml_tranlsate_html($content);
     }
     // Logger::instance()->debug($content);
@@ -123,22 +130,22 @@ add_filter('comment_text ', 'tml_comment_text_filter');
  * @param $file
  * @return mixed
  */
-function tml_plugin_action_links($links, $file) {
+function tml_plugin_action_links_filter($links, $file) {
     if (preg_match('/tml/', $file)) {
         $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=tml-admin">Settings</a>';
         array_unshift($links, $settings_link);
     }
     return $links;
 }
-add_filter('plugin_action_links', 'tml_plugin_action_links', 10, 2);
+add_filter('plugin_action_links', 'tml_plugin_action_links_filter', 10, 2);
 
 /**
  * Change labels from default to tml translated
  *
  * @link http://codex.wordpress.org/Plugin_API/Filter_Reference/gettext
  */
-function tml_translate_field_names( $translated_text, $text, $domain ) {
-    // if (is_admin()) return $translated_text;
+function tml_translate_fields_filter( $translated_text, $text, $domain ) {
+    if (is_admin()) return $translated_text;
 
     if (!Config::instance()->isEnabled()) {
         return $translated_text;
@@ -152,4 +159,4 @@ function tml_translate_field_names( $translated_text, $text, $domain ) {
     }
     return $translated_text;
 }
-add_filter( 'gettext', 'tml_translate_field_names', 20, 3 );
+add_filter( 'gettext', 'tml_translate_fields_filter', 20, 3 );
