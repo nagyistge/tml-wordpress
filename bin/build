@@ -2,6 +2,6 @@
 
 mv cache cache_backup
 mkdir cache
-zip -r dist/translation-exchange-0.3.3.zip translationexchange.php readme.txt assets cache src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE
+zip -r dist/translation-exchange-0.3.3.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE
 rmdir cache
 mv cache_backup cache

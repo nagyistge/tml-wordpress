@@ -193,8 +193,8 @@ function tml_tranlsate_html($label, $description = "", $tokens = array(), $optio
     return trh($label, $description, $tokens, $options);
 }
 
-include_once dirname(__FILE__)."/src/shortcodes.php";
-include_once dirname(__FILE__)."/src/filters.php";
-include_once dirname(__FILE__)."/src/actions.php";
-include_once dirname(__FILE__)."/src/widgets.php";
+include plugin_dir_path(__FILE__)."/src/shortcodes.php";
+include plugin_dir_path(__FILE__)."/src/filters.php";
+include plugin_dir_path(__FILE__)."/src/actions.php";
+include plugin_dir_path(__FILE__)."/src/widgets.php";
 
