@@ -1,7 +1,52 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-mv cache cache_backup
-mkdir cache
-zip -r dist/translation-exchange-0.3.4.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE
-rmdir cache
-mv cache_backup cache
+def execute(cmd)
+  puts "\n***************************************************************************\n"
+  puts "$ #{cmd}"
+  # system(cmd)
+end
+
+def readme_path
+  './readme.txt'
+end
+
+def readme
+  @readme ||= File.read(readme_path)
+end
+
+def version
+  @version ||= readme.match(/Stable tag:\s*([^\s]*)/)[1]
+end
+
+def build_number
+  version.split('.').last.to_i
+end
+
+def increment_build_number
+  puts "Incrementing build number to #{build_number + 1}..."
+
+  parts = version.split('.')
+  parts[parts.count-1] = build_number + 1
+  readme.gsub!(/Stable tag:\s*([^\s]*)/, "Stable tag: #{parts.join('.')}")
+
+  File.open(readme_path, 'w') do |file|
+    file.write(readme)
+  end
+
+  @readme = nil
+  @version = nil
+end
+
+def svn_folder
+  ENV['WP_SVN_PATH'] || '/Users/Berk/Projects/PHP/wordpress-svn/translation-exchange'
+end
+
+puts "Deploying WordPress plugin version #{version}..."
+
+execute("mv cache cache_backup")
+execute("mkdir cache")
+execute("zip -r dist/translation-exchange-0.3.4.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE")
+execute("rmdir cache")
+execute("mv cache_backup cache")
+
+increment_build_number

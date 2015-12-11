@@ -3,7 +3,7 @@ Contributors: translationx
 Tags: translationexchange, translation exchange, translation, exchange, tml, localization, localize, localisation, localise, translate,  translator, translations, l10n, i18n, tr8n, language, switch, select, selector, change, switcher
 Requires at least: 3.0
 Tested up to: 4.4
-Stable tag: 0.3.5
+Stable tag: 0.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -59,7 +59,7 @@ Our documentation is constantly updated with the latest FAQs.
 
 == Changelog ==
 
-= 0.3.5 =
+= 0.3.7 =
 * Switched to the new agent
 
 = 0.3.4 =
