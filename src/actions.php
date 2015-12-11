@@ -36,41 +36,35 @@ use Tml\Config;
 /**
  * Mechanism for injecting JavaScript
  */
-function tml_enqueue_scripts() {
-    if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "server_manual") {
-        wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_server.js', __FILE__) , false, null, true);
-        wp_enqueue_script('tml_init');
-        wp_localize_script('tml_init', 'TmlConfig', array(
-            "host" => get_option('tml_host'),
-            "key" => tml_application()->key,
-            "tools" => tml_application()->tools["host"],
-            "stylesheet" => tml_application()->tools["stylesheet"],
-            "css" => tml_application()->css,
-            "javascript" => tml_application()->tools["javascript"],
-            "default_locale" => tml_application()->default_locale,
-            "page_locale" => Config::instance()->current_language->locale,
-            "locale" => Config::instance()->current_language->locale,
-            "shortcuts" => (tml_application()->isFeatureEnabled("shortcuts") ? tml_application()->shortcuts : null)
-        ));
-    } else if (get_option('tml_mode') == "client") {
+function tml_enqueue_scripts()
+{
+    if (get_option('tml_mode') == "client") {
+        $tml_script_host = "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js";
+        if (!empty(get_option("tml_script_host")))
+            $tml_script_host = get_option("tml_script_host");
 
-        if (get_option("tml_script_host") != null)
-            wp_register_script('tml_js', get_option("tml_script_host"), false, null, false);
-        else
-            wp_register_script('tml_js', 'https://cdn.translationexchange.com/tools/tml/stable/tml.min.js', false, null, false);
+        $cache_interval = 86400;
+        $t = time();
+        $t = $t - ($t % $cache_interval);
+        $tml_script_host = $tml_script_host . '?ts=' . $t;
 
-        wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_client.js', __FILE__) , false, null, false);
+        wp_register_script('tml_js', $tml_script_host, false, null, false);
+        wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_client.js', __FILE__), false, null, false);
         wp_enqueue_script('tml_js');
         wp_enqueue_script('tml_init');
 
+        $tml_host = "https://api.translationexchange.com";
+        if (!empty(get_option('tml_host')))
+            $tml_host = get_option('tml_host');
+
         $options = array(
-            "host"      => get_option('tml_host'),
-            "key"       => get_option('tml_key'),
-            "token"     => get_option('tml_token'),
-            "advanced"  => get_option('tml_script_options')
+            "host" => $tml_host,
+            "key" => get_option('tml_key'),
+            "token" => get_option('tml_token'),
+            "advanced" => get_option('tml_script_options')
         );
 
-        if (get_option("tml_cache_type")=="local" && get_option("tml_cache_version") != '0') {
+        if (get_option("tml_cache_type") == "local" && get_option("tml_cache_version") != '0') {
             $options['cache'] = array(
                 "path" => plugins_url("translation-exchange/cache"),
                 "version" => get_option('tml_cache_version')
@@ -78,12 +72,62 @@ function tml_enqueue_scripts() {
         }
 
         wp_localize_script('tml_init', 'TmlConfig', $options);
+    } else {
+        wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_server.js', __FILE__), false, null, true);
+        wp_enqueue_script('tml_init');
+
+        $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
+        if (!empty(get_option('tml_agent_host')))
+            $agent_host = get_option('tml_agent_host');
+
+        $options = array(
+            "key" => get_option('tml_key'),
+            "agent" => array(
+                "type" => 'agent',
+                "host" => $agent_host
+            )
+        );
+
+        if (!empty(get_option('tml_agent_options'))) {
+            $result = json_decode(stripslashes(get_option('tml_agent_options')), true);
+
+            if (json_last_error() == JSON_ERROR_NONE) {
+                $options['agent'] = array_merge($options['agent'], $result);
+            }
+        }
+
+        $cache_interval = 86400;
+        if (isset($options['agent']['cache']))
+            $cache_interval = $options['agent']['cache'];
+        if (isset($options['agent']['host']))
+            $agent_host = $options['agent']['host'];
+
+        $t = time();
+        $t = $t - ($t % $cache_interval);
+        $options['agent']['host'] = $agent_host . '?ts=' . $t;
+
+        $options = array_merge($options, array(
+                "tools" => array(
+                    "javascript" => tml_application()->tools["javascript"],
+                    "stylesheet" => tml_application()->tools["stylesheet"],
+                    "css" => tml_application()->css,
+                    "host" => tml_application()->tools["host"],
+                    "default_locale" => tml_application()->default_locale,
+                    "locale" => Config::instance()->current_language->locale,
+                    "shortcuts" => (tml_application()->isFeatureEnabled("shortcuts") ? tml_application()->shortcuts : null)
+                )
+            )
+        );
+
+        wp_localize_script('tml_init', 'TmlConfig', $options);
     }
 }
+
 add_action('wp_enqueue_scripts', 'tml_enqueue_scripts');
 
 
-function tml_settings() {
+function tml_settings()
+{
     if (!current_user_can('manage_options')) {
         wp_die(__('You do not have sufficient permissions to access this page.'));
     }
@@ -91,7 +135,8 @@ function tml_settings() {
     include('admin/settings/index.php');
 }
 
-function tml_help() {
+function tml_help()
+{
     if (!current_user_can('manage_options')) {
         wp_die(__('You do not have sufficient permissions to access this page.'));
     }
@@ -99,7 +144,8 @@ function tml_help() {
     include('admin/help/index.php');
 }
 
-function tml_tools() {
+function tml_tools()
+{
     if (!current_user_can('manage_options')) {
         wp_die(__('You do not have sufficient permissions to access this page.'));
     }
@@ -107,7 +153,8 @@ function tml_tools() {
     include('admin/tools/index.php');
 }
 
-function tml_dashboard() {
+function tml_dashboard()
+{
     if (!current_user_can('manage_options')) {
         wp_die(__('You do not have sufficient permissions to access this page.'));
     }
@@ -118,14 +165,15 @@ function tml_dashboard() {
 /*
  * Admin Settings
  */
-function tml_menu_pages() {
+function tml_menu_pages()
+{
     // Add the top-level admin menu
     $page_title = 'Translation Exchange Settings';
     $menu_title = 'Translation Exchange';
     $capability = 'manage_options';
     $menu_slug = 'tml-admin';
     $function = 'tml_settings';
-    add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function,  plugin_dir_url(__FILE__) . "../assets/images/icon.png");
+    add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function, plugin_dir_url(__FILE__) . "../assets/images/icon.png");
 
     $sub_menu_title = __('Settings');
     add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function);
@@ -148,6 +196,7 @@ function tml_menu_pages() {
 //    $submenu_function = 'tml_help';
 //    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
 }
+
 add_action('admin_menu', 'tml_menu_pages');
 
 
@@ -155,7 +204,9 @@ add_action('admin_menu', 'tml_menu_pages');
  * Action for completing request
  *
  */
-function tml_request_shutdown() {
+function tml_request_shutdown()
+{
     tml_complete_request();
 }
+
 add_action('shutdown', 'tml_request_shutdown');

@@ -85,7 +85,13 @@
                 <?php if (get_option("tml_mode") == "client") { ?>
                     <div style="width:700px;">
                         <div style="float:right; padding-top:5px;" id="tml_script_options_button">
-                            <a href="#" onclick="showAdvancedOptions();" style="color: #ccc;"><?php echo __('Show advanced options') ?></a>
+                            <a href="#" onclick="showScriptOptions();" style="color: #ccc;"><?php echo __('Show advanced options') ?></a>
+                        </div>
+                    </div>
+                <?php } else { ?>
+                    <div style="width:700px;">
+                        <div style="float:right; padding-top:5px;" id="tml_agent_options_button">
+                            <a href="#" onclick="showAgentOptions();" style="color: #ccc;"><?php echo __('Show advanced options') ?></a>
                         </div>
                     </div>
                 <?php } ?>

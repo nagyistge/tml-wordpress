@@ -35,7 +35,11 @@ use tml\utils\FileUtils;
 
 echo "<p>" .  __("Downloading current release from Translation Exchange...") . "</p>";
 try {
-    $snapshot = file_get_contents(get_option('tml_host') . "/v1/snapshots/current?access_token=" . get_option('tml_token'));
+    $host = "https://api.translationexchange.com";
+    if (!empty(get_option('tml_host')))
+        $host = get_option('tml_host');
+
+    $snapshot = file_get_contents($host . "/v1/snapshots/current?access_token=" . get_option('tml_token'));
     $snapshot = json_decode($snapshot, true);
 
     if (!$snapshot) {

@@ -49,9 +49,6 @@ add_option('tml_mode', 'client');
 add_option('tml_cache_type', 'none');
 add_option('tml_cache_version', '0');
 
-add_option('tml_host', 'https://api.translationexchange.com');
-update_option('tml_host', 'https://api.translationexchange.com');
-
 add_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 update_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 
@@ -88,10 +85,14 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
         );
     }
 
+    $service_host = 'https://api.translationexchange.com';
+    if (!empty(get_option('tml_host')))
+        $service_host = get_option('tml_host');
+
     tml_init(array(
         "key"       => get_option('tml_key'),
         "token"     => get_option('tml_token'),
-        "host"      => get_option('tml_host'),
+        "host"      => $service_host,
         "log"       => array(
             "enabled"   => false,
             "severity"  => "debug",

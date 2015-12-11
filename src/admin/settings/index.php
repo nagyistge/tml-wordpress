@@ -73,7 +73,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
     $cache_field_name = 'tml_update_cache_hidden';
 
     $application_fields = array(
-        'tml_host' => array("title" => __('Host:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com", "style" => "display:none"),
         'tml_key' => array("title" => __('Project Key:'), "value" => get_option('tml_key'), "default" => "Paste your application key here"),
         'tml_token' => array("title" => __('Access Token:'), "value" => get_option('tml_token'), "default" => "Paste your application token here"),
         'tml_mode' => array("title" => __('Mode:'), "value" => get_option('tml_mode'), "default" => "", "type" => "radio", "options" => array(
@@ -85,10 +84,16 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
 
     $script_fields = array(
         'tml_script_host' => array("title" => __('Script Host:'), "value" => get_option('tml_script_host'), "type" => "text", "default" => "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js", "style" => "display:none"),
-        'tml_script_options' => array("title" => __('Options:'), "value" => get_option('tml_script_options'), "type" => "textarea", "default" => __('Provide custom script options in a JSON format'), "style" => "display:none"),
+        'tml_script_options' => array("title" => __('Options:'), "value" => get_option('tml_script_options'), "type" => "textarea", "default" => __('Provide custom script options in JSON format'), "style" => "display:none"),
     );
 
-    $field_sets = array($application_fields, $script_fields);
+    $agent_fields = array(
+        'tml_host' => array("title" => __('Service Host:'), "value" => get_option('tml_host'), "default" => "https://api.translationexchange.com", "style" => "display:none"),
+        'tml_agent_host' => array("title" => __('Agent Host:'), "value" => get_option('tml_agent_host'), "type" => "text", "default" => "https://tools.translationexchange.com/agent/stable/agent.min.js", "style" => "display:none"),
+        'tml_agent_options' => array("title" => __('Options:'), "value" => get_option('tml_agent_options'), "type" => "textarea", "default" => __('Provide custom agent options in JSON format'), "style" => "display:none"),
+    );
+
+    $field_sets = array($application_fields, $script_fields, $agent_fields);
 
     if (isset($_POST[ $submit_field_name ]) && $_POST[ $submit_field_name ] == 'Y') {
 

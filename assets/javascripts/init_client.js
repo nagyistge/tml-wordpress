@@ -8,11 +8,6 @@ if (TmlConfig && TmlConfig.key && TmlConfig.token) {
         debug:              false,
         translator_options: {
             ignore_elements: ['#wpadminbar', '.sd-content', '.blog-post-meta']
-        },
-        agent: {
-            enabled:    true,
-            type:       'tools',
-            version:    'stable'
         }
     };
 

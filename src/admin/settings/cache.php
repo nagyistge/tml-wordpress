@@ -331,9 +331,17 @@ use tml\Cache;
         document.getElementById("cache_form").submit();
     }
 
-    function showAdvancedOptions() {
+    function showScriptOptions() {
         document.getElementById("tml_script_host").style.display = 'inline-block';
         document.getElementById("tml_script_options").style.display = 'inline-block';
         document.getElementById("tml_script_options_button").style.display = 'none';
     }
+
+    function showAgentOptions() {
+        document.getElementById("tml_host").style.display = 'inline-block';
+        document.getElementById("tml_agent_host").style.display = 'inline-block';
+        document.getElementById("tml_agent_options").style.display = 'inline-block';
+        document.getElementById("tml_agent_options_button").style.display = 'none';
+    }
+
 </script>
