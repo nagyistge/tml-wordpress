@@ -43,7 +43,7 @@ end
 
 def update_plugin_version
   plugin = File.read(plugin_path)
-  plugin.gsub!(/Stable\stag:\s\d*\.\d*\.\d*/, "Stable tag: #{version}")
+  plugin.gsub!(/Version:\s\d*\.\d*\.\d*/, "Version: #{version}")
   File.open(plugin_path, 'w') do |file|
     file.write(plugin)
   end
