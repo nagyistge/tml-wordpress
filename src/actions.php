@@ -39,9 +39,8 @@ use Tml\Config;
 function tml_enqueue_scripts()
 {
     if (get_option('tml_mode') == "client") {
-        $tml_script_host = "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js";
-        if (!empty(get_option("tml_script_host")))
-            $tml_script_host = get_option("tml_script_host");
+        $tml_script_host = get_option("tml_script_host");
+        if (empty($tml_script_host)) $tml_script_host = "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js";
 
         $cache_interval = 86400;
         $t = time();
@@ -53,9 +52,8 @@ function tml_enqueue_scripts()
         wp_enqueue_script('tml_js');
         wp_enqueue_script('tml_init');
 
-        $tml_host = "https://api.translationexchange.com";
-        if (!empty(get_option('tml_host')))
-            $tml_host = get_option('tml_host');
+        $tml_host = get_option('tml_host');
+        if (empty($tml_host)) $tml_host = "https://api.translationexchange.com";
 
         $options = array(
             "host" => $tml_host,
@@ -76,9 +74,8 @@ function tml_enqueue_scripts()
         wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_server.js', __FILE__), false, null, true);
         wp_enqueue_script('tml_init');
 
-        $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
-        if (!empty(get_option('tml_agent_host')))
-            $agent_host = get_option('tml_agent_host');
+        $agent_host = get_option('tml_agent_host');
+        if (empty($agent_host)) $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
 
         $options = array(
             "key" => get_option('tml_key'),
@@ -88,8 +85,9 @@ function tml_enqueue_scripts()
             )
         );
 
-        if (!empty(get_option('tml_agent_options'))) {
-            $result = json_decode(stripslashes(get_option('tml_agent_options')), true);
+        $agent_options = get_option('tml_agent_options');
+        if (!empty($agent_options)) {
+            $result = json_decode(stripslashes($agent_options), true);
 
             if (json_last_error() == JSON_ERROR_NONE) {
                 $options['agent'] = array_merge($options['agent'], $result);
