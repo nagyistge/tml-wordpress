@@ -38,15 +38,30 @@ def increment_build_number
 end
 
 def svn_folder
-  ENV['WP_SVN_PATH'] || '/Users/Berk/Projects/PHP/wordpress-svn/translation-exchange'
+  ENV['WP_SVN_PATH'] || '~/Projects/PHP/wordpress-svn/translation-exchange'
 end
 
 puts "Deploying WordPress plugin version #{version}..."
 
 execute("mv cache cache_backup")
 execute("mkdir cache")
-execute("zip -r dist/translation-exchange-0.3.4.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE")
+execute("zip -r dist/translation-exchange-#{version}.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE")
 execute("rmdir cache")
 execute("mv cache_backup cache")
 
+execute("git add dist/translation-exchange-#{version}.zip")
+execute("git commit -m 'Added build #{version}'")
+execute("git push")
+
+execute("git checkout master")
+execute("git merge develop")
+execute("git tag '#{version}'")
+execute("git push")
+
+execute("git checkout develop")
+
 increment_build_number
+
+execute("git add #{readme_path}")
+execute("git commit -m 'Increment build to #{version}'")
+execute("git push")
