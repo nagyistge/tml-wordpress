@@ -49,6 +49,10 @@ execute("zip -r dist/translation-exchange-#{version}.zip translationexchange.php
 execute("rmdir cache")
 execute("mv cache_backup cache")
 
+execute("mkdir -R #{svn_folder}/tags/#{version}")
+execute("unzip dist/translation-exchange-#{version}.zip -d #{svn_folder}/tags/#{version}")
+execute("unzip dist/translation-exchange-#{version}.zip -d #{svn_folder}/trunk")
+
 execute("git add dist/translation-exchange-#{version}.zip")
 execute("git commit -m 'Added build #{version}'")
 execute("git push")
@@ -65,3 +69,4 @@ increment_build_number
 execute("git add #{readme_path}")
 execute("git commit -m 'Increment build to #{version}'")
 execute("git push")
+
