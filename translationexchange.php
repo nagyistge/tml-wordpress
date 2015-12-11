@@ -85,9 +85,8 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
         );
     }
 
-    $service_host = 'https://api.translationexchange.com';
-    if (!empty(get_option('tml_host')))
-        $service_host = get_option('tml_host');
+    $service_host = get_option('tml_host');
+    if (empty($service_host)) $service_host = 'https://api.translationexchange.com';
 
     tml_init(array(
         "key"       => get_option('tml_key'),
