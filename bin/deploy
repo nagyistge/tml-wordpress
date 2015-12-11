@@ -51,7 +51,7 @@ execute("mv cache_backup cache")
 
 execute("mkdir -R #{svn_folder}/tags/#{version}")
 execute("unzip dist/translation-exchange-#{version}.zip -d #{svn_folder}/tags/#{version}")
-execute("unzip dist/translation-exchange-#{version}.zip -d #{svn_folder}/trunk")
+execute("unzip -o dist/translation-exchange-#{version}.zip -d #{svn_folder}/trunk")
 
 execute("git add dist/translation-exchange-#{version}.zip")
 execute("git commit -m 'Added build #{version}'")
