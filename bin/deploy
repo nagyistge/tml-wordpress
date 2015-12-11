@@ -27,14 +27,12 @@ def increment_build_number
 
   parts = version.split('.')
   parts[parts.count-1] = build_number + 1
-  readme.gsub!(/Stable tag:\s*([^\s]*)/, "Stable tag: #{parts.join('.')}")
+  @version = parts.join('.')
+  readme.gsub!(/Stable tag:\s*([^\s]*)/, "Stable tag: #{version}")
 
   File.open(readme_path, 'w') do |file|
     file.write(readme)
   end
-
-  @readme = nil
-  @version = nil
 end
 
 def plugin_path
