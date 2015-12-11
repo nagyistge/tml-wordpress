@@ -3,7 +3,7 @@
 def execute(cmd)
   puts "\n***************************************************************************\n"
   puts "$ #{cmd}"
-  # system(cmd)
+  system(cmd)
 end
 
 def readme_path
