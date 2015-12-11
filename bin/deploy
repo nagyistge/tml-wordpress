@@ -37,6 +37,18 @@ def increment_build_number
   @version = nil
 end
 
+def plugin_path
+  './translationexchange.php'
+end
+
+def update_plugin_version
+  plugin = File.read(plugin_path)
+  plugin.gsub!(/Stable\stag:\s\d*\.\d*\.\d*/, "Stable tag: #{version}")
+  File.open(plugin_path, 'w') do |file|
+    file.write(plugin)
+  end
+end
+
 def svn_folder
   ENV['WP_SVN_PATH'] || '~/Projects/PHP/wordpress-svn/translation-exchange'
 end
@@ -65,8 +77,10 @@ execute("git push")
 execute("git checkout develop")
 
 increment_build_number
+update_plugin_version
 
-execute("git add #{readme_path}")
+execute("git add #{readme_path} #{plugin_path}")
 execute("git commit -m 'Increment build to #{version}'")
 execute("git push")
+
 
