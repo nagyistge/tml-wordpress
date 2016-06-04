@@ -30,7 +30,7 @@ Links
 Copyright and license
 ==================
 
-Copyright (c) 2015 Translation Exchange, Inc.
+Copyright (c) 2016 Translation Exchange, Inc.
 
 GNU General Public License, version 2
 

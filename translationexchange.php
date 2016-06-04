@@ -4,13 +4,13 @@
   Plugin URI: http://wordpress.org/plugins/translationexchange/
   Description: Translate your Wordpress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.3.16
+  Version: 0.3.17
   Author URI: https://translationexchange.com/
   License: GPLv2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  */
 
 /*
-  Copyright (c) 2015 Translation Exchange, Inc
+  Copyright (c) 2016 Translation Exchange, Inc
 
    _______                  _       _   _             ______          _
   |__   __|                | |     | | (_)           |  ____|        | |
@@ -54,7 +54,7 @@ update_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 
 require_once(dirname(__FILE__).'/src/tml/src/init.php');
 
-use Tml\Config;
+use Tml\Session;
 use Tml\utils\ArrayUtils;
 use Tml\utils\StringUtils;
 
@@ -104,7 +104,7 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
 /**
  * Report to WordPress Debug that we are ready
  */
-if (Config::instance()->isEnabled()) {
+if (Session::instance()->isActive()) {
     apply_filters('debug', 'Tml Initialized');
 }
 

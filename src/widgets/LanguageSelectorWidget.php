@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (c) 2015 Translation Exchange, Inc
+  Copyright (c) 2016 Translation Exchange, Inc
 
    _______                  _       _   _             ______          _
   |__   __|                | |     | | (_)           |  ____|        | |
@@ -67,10 +67,13 @@ class LanguageSelectorWidget extends WP_Widget {
                 style="margin-bottom: 10px;"
                 id="<?php echo $this->get_field_id( 'style' ); ?>"
                 name="<?php echo $this->get_field_name( 'style' ); ?>">
-                <option value="list" <?php if ($style == 'list') echo 'selected'; ?>>List</option>
-                <option value="dropdown" <?php if ($style == 'dropdown') echo 'selected'; ?>>Dropdown</option>
-                <option value="popup" <?php if ($style == 'popup') echo 'selected'; ?>>Popup</option>
-                <option value="flags" <?php if ($style == 'flags') echo 'selected'; ?>>Flags</option>
+                <option value="sideflags-left" <?php if ($style == 'sideflags-left') echo 'selected'; ?>>Side Flags on the Left</option>
+                <option value="sideflags-right" <?php if ($style == 'sideflags-right') echo 'selected'; ?>>Side Flags on the Right</option>
+                <option value="default" <?php if ($style == 'default') echo 'selected'; ?>>Lightbox</option>
+                <option value="list" <?php if ($style == 'list') echo 'selected'; ?>>Language List</option>
+                <option value="dropdown" <?php if ($style == 'dropdown') echo 'selected'; ?>>Dropdown List</option>
+                <option value="popup" <?php if ($style == 'popup') echo 'selected'; ?>>Popup Window</option>
+                <option value="flags" <?php if ($style == 'flags') echo 'selected'; ?>>Flags List</option>
 <!--                <option value="custom" --><?php //if ($style == 'custom') echo 'selected'; ?><!-->Custom</option>-->
             </select>
 
@@ -121,9 +124,15 @@ class LanguageSelectorWidget extends WP_Widget {
                 <aside id="meta-2" class="widget widget_meta masonry-brick" style="">
                 <h4><?php echo $title; ?></h4>
                 <div style="border:0px solid #ccc; margin-bottom:15px; margin-top:5px;">
-                    <div data-tml-language-selector='<?php echo $style; ?>'
+                    <?php if ($style == 'sideflags-right') { ?>
+                        <div data-tml-language-selector='sideflags' data-tml-side='right'
+                    <?php } else if ($style == 'sideflags-left') { ?>
+                        <div data-tml-language-selector='sideflags' data-tml-side='left'
+                    <?php } else { ?>
+                        <div data-tml-language-selector='<?php echo $style; ?>'
+                    <?php } ?>
                         <?php if ($powered_by_flag == "true") { ?>
-                                data-tml-powered-by='<?php echo $powered_by_flag; ?>'
+                            data-tml-powered-by='<?php echo $powered_by_flag; ?>'
                         <?php } ?>
                         <?php if ($toggle_flag == "true") { ?>
                             data-tml-toggle='<?php echo $toggle_flag; ?>'

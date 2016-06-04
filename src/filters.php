@@ -30,7 +30,7 @@
     http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-use Tml\Config;
+use Tml\Session;
 
 /**
  * Filter for capturing article title
@@ -147,7 +147,7 @@ add_filter('plugin_action_links', 'tml_plugin_action_links_filter', 10, 2);
 function tml_translate_fields_filter( $translated_text, $text, $domain ) {
     if (is_admin()) return $translated_text;
 
-    if (!Config::instance()->isEnabled()) {
+    if (!Session::instance()->isActive()) {
         return $translated_text;
     }
 

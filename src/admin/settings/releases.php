@@ -33,27 +33,37 @@
 use tml\Cache;
 use tml\utils\FileUtils;
 
-echo "<p>" .  __("Downloading current release from Translation Exchange...") . "</p>";
-try {
-    $host = get_option('tml_host');
-    if (empty($host)) $host = "https://api.translationexchange.com";
+echo "<p>" .  __("Downloading latest release from Translation Exchange CDN...") . "</p>";
 
-    $snapshot = file_get_contents($host . "/v1/snapshots/current?access_token=" . get_option('tml_token'));
-    $snapshot = json_decode($snapshot, true);
+function getCdnHost() {
+    return "https://cdn.translationexchange.com";
+}
 
-    if (!$snapshot) {
-        throw new Exception("Failed to download release");
+function fetchFromCdn($path, $opts = array()) {
+    try {
+        $data = file_get_contents(getCdnHost() . "/" . $path);
+        if (isset($opts['decode']) && $opts['decode'])
+            $data = json_decode($data, true);
+    } catch (Exception $e) {
+        $data = false;
     }
 
-    if (isset($snapshot['status']) && $snapshot['status'] == 'none') {
+    return $data;
+}
+
+try {
+    $version = fetchFromCdn(get_option('tml_key') . "/version.json", ['decode' => true]);
+
+    if (!$version) {
         echo "<p>" .  __("You current don't have any releases.") . "</p>";
         echo "<p>To release your translations, please visit <a href='https://dashboard.translationexchange.com'>your dashboard</a>, choose <strong>Releases</strong> section and click on <strong>Publish Translations</strong> button.</p>";
         echo "<a href='/wp-admin/admin.php?page=tml-admin' class='button' style='margin-right:15px;'>" .  __('Go Back') . "</a>";
     } else {
+        $snapshot = fetchFromCdn(get_option('tml_key') . '/' . $version['version'] . '/snapshot.json', ['decode' => true]);
 
         try {
-            $data = file_get_contents($snapshot['url']);
-            $version_path = get_option('tml_cache_path') . "/" . $snapshot['version'];
+            $data = file_get_contents(getCdnHost() . '/' . get_option('tml_key') . '/' . $snapshot['version'] . '.tar.gz');
+            $version_path = get_option('tml_cache_path') . '/' . $snapshot['version'];
             $file_path = $version_path . ".tar.gz";
             $result = file_put_contents($file_path, $data);
         } catch (Exception $e) {
@@ -61,10 +71,10 @@ try {
         }
 
         if (!$result) {
-            echo "<p>Failed to download and store snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions.</p>";
+            echo "<p>Failed to download and store release data. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions.</p>";
         } else {
             echo "<p>Downloaded version <strong>" . $snapshot['version'] . "</strong> ($result bytes).</p>";
-            echo "<p>Summary: " . $snapshot['metrics']['language_count'] . " languages, " . $snapshot['metrics']['key_count'] . " phrases, " . $snapshot['metrics']['translation_count'] . " translations </p>";
+            echo "<p>Summary: " . $snapshot['metrics']['language_count'] . " languages, " . $snapshot['metrics']['translation_key_count'] . " phrases, " . $snapshot['metrics']['source_count'] . " sources </p>";
             echo "<p>Extracting content...</p>";
             try {
                 $phar = new PharData($file_path);
@@ -78,7 +88,7 @@ try {
 
             if ($result) {
                 update_option("tml_cache_version", $snapshot['version']);
-                echo "<p>Snapshot has been extracted and is ready for use.</p>";
+                echo "<p>Snapshot has been extracted and is ready to be used.</p>";
             } else {
                 echo "<p>Failed to extract snapshot. Please make sure that <strong>" . get_option('tml_cache_path') . "</strong> has write permissions and has enough space..</p>";
             }

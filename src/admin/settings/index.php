@@ -73,13 +73,13 @@ if (isset($_POST['action']) && $_POST['action'] == 'download_cache') {
     $cache_field_name = 'tml_update_cache_hidden';
 
     $application_fields = array(
-        'tml_key' => array("title" => __('Project Key:'), "value" => get_option('tml_key'), "default" => "Paste your application key here"),
-        'tml_token' => array("title" => __('Access Token:'), "value" => get_option('tml_token'), "default" => "Paste your application token here"),
-        'tml_mode' => array("title" => __('Mode:'), "value" => get_option('tml_mode'), "default" => "", "type" => "radio", "options" => array(
-            array("title" => __('Client-side (using JavaScript)'), "value" => "client"),
-            array("title" => __('Server-side (using PHP)'), "value" => "server_automated"),
+        'tml_key' => array("title" => __('Project Key:'), "value" => get_option('tml_key'), "default" => "Paste your application key here")
+//        'tml_token' => array("title" => __('Access Token:'), "value" => get_option('tml_token'), "default" => "Paste your application token here"),
+//        'tml_mode' => array("title" => __('Mode:'), "value" => get_option('tml_mode'), "default" => "", "type" => "radio", "options" => array(
+//            array("title" => __('Client-side (using JavaScript)'), "value" => "client"),
+//            array("title" => __('Server-side (using PHP)'), "value" => "server_automated"),
 //            array("title" => __('Server-side (manual, using shortcodes)'), "value" => "server_manual"),
-        )),
+//        ))
     );
 
     $script_fields = array(

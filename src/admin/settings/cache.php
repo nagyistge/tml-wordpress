@@ -35,15 +35,93 @@ use tml\Cache;
 ?>
 
 <h2>
-    <?php echo __( 'Translation Cache Settings' ); ?>
+    <?php echo __('Translation Cache Settings'); ?>
 </h2>
 
-<hr />
+<hr/>
 
 <div style="padding-left:10px; color: #888">
     <?php echo(__("For better performance, your translations should be cached.")) ?>
-    <a href="https://translationexchange.com/docs/plugins/wordpress" target="_new">Click here</a> to learn more about cache options.
+    <a href="https://translationexchange.com/docs/plugins/wordpress"
+       target="_new"><?php echo __('Click here to learn more about cache options.'); ?></a>
 </div>
+
+<style>
+    .progress {
+        width: 100%;
+        height: 8px;
+        border-radius: 3px;
+    }
+
+    .progress-wrap {
+        background: #ddd;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-bar {
+        background: #f80;
+        left: 0;
+        position: absolute;
+        top: 0;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    .progress-bar.approved {
+        background: #0FCE89;
+    }
+
+    .progress-bar.translated {
+        background: #11f59b;
+    }
+
+    .arrow-down {
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #888;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 2px;
+    }
+
+    .arrow-right {
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid #888;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 7px;
+    }
+
+    .metrics-title {
+        border-right: 1px solid #ccc;
+        padding: 3px;
+        width: 20%;
+        color: #888;
+        text-align: center;
+    }
+
+    .metrics-title.last {
+        border-right: 0px;
+    }
+
+    .metrics-value {
+        border-right: 1px solid #ccc;
+        padding: 3px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .metrics-value.last {
+        border-right: 0px;
+    }
+
+</style>
 
 <form id="cache_form" method="post" action="">
     <input type="hidden" name="action" id="cache_action" value="download_cache">
@@ -52,7 +130,6 @@ use tml\Cache;
     <input type="hidden" name="host" id="cache_host" value="">
     <input type="hidden" name="port" id="cache_port" value="">
     <input type="hidden" name="version" id="cache_version" value="">
-
 
     <?php
     $folders = array_reverse(scandir(get_option('tml_cache_path')));
@@ -65,13 +142,21 @@ use tml\Cache;
         $data = file_get_contents($path . "/snapshot.json");
         $snapshot = json_decode($data, true);
         $snapshot['path'] = $path;
+
+        $data = file_get_contents($path . "/application.json");
+        $snapshot['application'] = json_decode($data, true);
+
+        $data = file_get_contents($path . "/sources.json");
+        $snapshot['sources'] = json_decode($data, true);
+
         array_push($snapshots, $snapshot);
     }
     ?>
 
     <div style="margin-top: 10px; width: 100%">
         <div>
-            <div style="display: inline-block; width:100px; padding:10px; vertical-align: top;"><?php echo __("Cache Options:") ?></div>
+            <div
+                style="display: inline-block; width:100px; padding:10px; vertical-align: top;"><?php echo __("Cache Options:") ?></div>
             <div style="display: inline-block; padding:10px; vertical-align: top;">
 
                 <div style="border: 1px solid #ccc; width: 700px; margin-bottom: 10px;">
@@ -81,7 +166,8 @@ use tml\Cache;
                             if (get_option("tml_cache_type") == "none") {
                                 echo "<strong>" . __("current") . "</strong>";
                             } else {
-                                ?> <a href="#" onclick="useCache('none', '0')" style="text-decoration: none"><?php echo __("use") ?></a> <?php
+                                ?> <a href="#" onclick="useCache('none', '0')"
+                                      style="text-decoration: none"><?php echo __("use") ?></a> <?php
                             }
                             ?>
                         </div>
@@ -90,11 +176,7 @@ use tml\Cache;
                         if (get_option("tml_cache_version") == "0")
                             echo "<strong>";
 
-                        echo __("No cache");
-                        echo "<span style='color: #888;'>";
-                        echo " - ";
-                        echo __("data is requested directly from Translation Exchange");
-                        echo "</span>";
+                        echo __("Translation Exchange CDN");
 
                         if (get_option("tml_cache_version") == "0")
                             echo "</strong>";
@@ -110,7 +192,8 @@ use tml\Cache;
                                 if (get_option("tml_cache_type") == "dynamic") {
                                     echo "<strong>" . __("current") . "</strong>";
                                 } else {
-                                    ?> <a href="#" onclick="saveDynamicCache()" style="text-decoration: none"><?php echo __("use") ?></a> <?php
+                                    ?> <a href="#" onclick="saveDynamicCache()"
+                                          style="text-decoration: none"><?php echo __("use") ?></a> <?php
                                 }
                                 ?>
                             </div>
@@ -136,8 +219,14 @@ use tml\Cache;
                                     </td>
                                     <td style="">
                                         <select id="tml_cache_adapter" style="width:580px;" disabled>
-                                            <option value="memcached" <?php if (get_option("tml_cache_adapter") == "memcached") echo "selected"; ?>>Memcached</option>
-                                            <option value="redis"    <?php if (get_option("tml_cache_adapter") == "redis") echo "selected"; ?>>Redis</option>
+                                            <option
+                                                value="memcached" <?php if (get_option("tml_cache_adapter") == "memcached") echo "selected"; ?>>
+                                                Memcached
+                                            </option>
+                                            <option
+                                                value="redis" <?php if (get_option("tml_cache_adapter") == "redis") echo "selected"; ?>>
+                                                Redis
+                                            </option>
                                         </select>
                                     </td>
                                 </tr>
@@ -146,7 +235,9 @@ use tml\Cache;
                                         <?php echo __("Host:") ?>
                                     </td>
                                     <td style="">
-                                        <input type="text" id="tml_cache_host" disabled value="<?php echo(get_option("tml_cache_host")) ?>" placeholder="localhost"  style="width:580px">
+                                        <input type="text" id="tml_cache_host" disabled
+                                               value="<?php echo(get_option("tml_cache_host")) ?>"
+                                               placeholder="localhost" style="width:580px">
                                     </td>
                                 </tr>
                                 <tr>
@@ -154,16 +245,26 @@ use tml\Cache;
                                         <?php echo __("Port:") ?>
                                     </td>
                                     <td style="">
-                                        <input type="text" id="tml_cache_port" disabled value="<?php echo(get_option("tml_cache_port")) ?>" placeholder="11211"  style="width:580px">
+                                        <input type="text" id="tml_cache_port" disabled
+                                               value="<?php echo(get_option("tml_cache_port")) ?>" placeholder="11211"
+                                               style="width:580px">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td></td>
                                     <td style="">
-                                        <a href='#' id='tml_edit_dynamic_cache_button' class='button' style='margin-top:5px;' onClick="editDynamicCache()"><?php echo __('Edit Settings') ?></a>
-                                        <a href='#' id='tml_reset_dynamic_cache_button' class='button' style='margin-top:5px;' onClick="syncDynamicCache()"><?php echo __('Update to Current Version') ?></a>
-                                        <a href='#' id='tml_save_dynamic_cache_button' class='button' style='margin-top:5px;display:none;' onClick="saveDynamicCache()"><?php echo __('Save') ?></a>
-                                        <a href='#' id='tml_cancel_dynamic_cache_button' class='button' style='margin-top:5px;display:none;' onClick="cancelDynamicCacheEdit()"><?php echo __('Cancel') ?></a>
+                                        <a href='#' id='tml_edit_dynamic_cache_button' class='button'
+                                           style='margin-top:5px;'
+                                           onClick="editDynamicCache()"><?php echo __('Edit Settings') ?></a>
+                                        <a href='#' id='tml_reset_dynamic_cache_button' class='button'
+                                           style='margin-top:5px;'
+                                           onClick="syncDynamicCache()"><?php echo __('Update to Current Version') ?></a>
+                                        <a href='#' id='tml_save_dynamic_cache_button' class='button'
+                                           style='margin-top:5px;display:none;'
+                                           onClick="saveDynamicCache()"><?php echo __('Save') ?></a>
+                                        <a href='#' id='tml_cancel_dynamic_cache_button' class='button'
+                                           style='margin-top:5px;display:none;'
+                                           onClick="cancelDynamicCacheEdit()"><?php echo __('Cancel') ?></a>
                                     </td>
                                 </tr>
                             </table>
@@ -182,7 +283,37 @@ use tml\Cache;
 
                 <?php
                 foreach ($snapshots as $snapshot) {
+                    $progress = array(
+                        'total' => array(
+                            'languages' => 0,
+                            'translated' => 0,
+                            'approved' => 0
+                        )
+                    );
+
+                    foreach ($snapshot['application']['languages'] as $language) {
+                        if ($language['locale'] == $snapshot['application']['default_locale'])
+                            continue;
+
+
+                        $total_keys = $snapshot['metrics']['translation_key_count'];
+                        $translated_keys = $snapshot['metrics']['languages'][$language['locale']]['translated_key_count'];
+                        $approved_keys = $snapshot['metrics']['languages'][$language['locale']]['approved_key_count'];
+
+                        $progress[$language['locale']] = array(
+                            'translated' => round($translated_keys / $total_keys * 100),
+                            'approved' => round($approved_keys / $total_keys * 100)
+                        );
+
+                        $progress['total']['translated'] = $progress['total']['translated'] + $progress[$language['locale']]['translated'];
+                        $progress['total']['approved'] = $progress['total']['approved'] + $progress[$language['locale']]['approved'];
+                        $progress['total']['languages'] = $progress['total']['languages'] + 1;
+                    }
+
+                    $progress['total']['translated'] = round($progress['total']['translated']/$progress['total']['languages']);
+                    $progress['total']['approved'] = round($progress['total']['approved']/$progress['total']['languages']);
                     ?>
+
                     <div style="border: 1px solid #ccc; width: 700px; margin-bottom: 10px;">
                         <div style="background:#fefefe; padding: 5px; border-bottom: 1px solid #ccc;">
                             <div style="float:right; color:#888;">
@@ -190,44 +321,98 @@ use tml\Cache;
                                 if (get_option("tml_cache_type") == 'local' && $snapshot['version'] === get_option("tml_cache_version")) {
                                     echo "<strong>" . __("current") . "</strong>";
                                 } else {
-                                    ?> <a href="#" onclick="useCache('local', '<?php echo $snapshot['version']; ?>')" style="text-decoration: none"><?php echo __("use") ?></a> <?php
+                                    ?> <a href="#" onclick="useCache('local', '<?php echo $snapshot['version']; ?>')"
+                                          style="text-decoration: none"><?php echo __("use") ?></a> <?php
                                 }
                                 ?>
                                 <span style="color:#ccc;">|</span>
-                                <a href="#" onclick="deleteCache('<?php echo $snapshot['version']; ?>')" style="text-decoration: none"><?php echo __("remove") ?></a>
+                                <a href="#" onclick="deleteCache('<?php echo $snapshot['version']; ?>')"
+                                   style="text-decoration: none"><?php echo __("remove") ?></a>
                             </div>
 
+                            <div class="arrow-right" id="snapshot-<?php echo $snapshot['version'] ?>-arrow"
+                                 onclick="toggleSnapshot('<?php echo $snapshot['version'] ?>')"></div>
+
                             <?php
-                            if (get_option("tml_cache_type") == 'local' &&  $snapshot['version'] === get_option("tml_cache_version"))
+                            if (get_option("tml_cache_type") == 'local' && $snapshot['version'] === get_option("tml_cache_version"))
                                 echo "<strong>";
 
-                            echo __("Local cache");
-                            echo "<span style='color: #888;'>";
-                            echo " - ";
-                            echo __("release generated on: ") . $snapshot['created_at'];
-                            echo "</span>";
+                            echo("<a href='#' style='text-decoration: none' onclick=\"toggleSnapshot('" . $snapshot['version'] . "'); return false;\">");
+                            echo __("Release generated at ") . $snapshot['created_at'];
+                            echo("</a>");
 
-                            if (get_option("tml_cache_type") == 'local' &&  $snapshot['version'] === get_option("tml_cache_version"))
+                            if (get_option("tml_cache_type") == 'local' && $snapshot['version'] === get_option("tml_cache_version"))
                                 echo "</strong>";
                             ?>
                         </div>
-                        <div style="padding: 5px;">
+                        <div id="snapshot-<?php echo $snapshot['version'] ?>-details"
+                             style="display: none; padding-top:5px;">
                             <table style="width:100%; font-size:12px;" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Languages") ?></td>
-                                    <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Phrases") ?></td>
-                                    <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Translations") ?></td>
-                                    <td style="border-right: 1px solid #ccc; padding:3px; width: 20%; color: #888;"><?php echo __("Translated") ?></td>
-                                    <td style="padding:3px; width: 20%; color: #888;"><?php echo __("Approved") ?></td>
+                                    <td class="metrics-title"><?php echo __("Phrases") ?></td>
+                                    <td class="metrics-title"><?php echo __("Sources") ?></td>
+                                    <td class="metrics-title"><?php echo __("Languages") ?></td>
+                                    <td class="metrics-title"><?php echo __("Translated") ?></td>
+                                    <td class="metrics-title last"><?php echo __("Approved") ?></td>
                                 </tr>
                                 <tr>
-                                    <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['language_count']; ?></td>
-                                    <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['key_count']; ?></td>
-                                    <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['translation_count']; ?></td>
-                                    <td style="border-right: 1px solid #ccc; padding:3px;"><?php echo $snapshot['metrics']['percent_translated']; ?>%</td>
-                                    <td style="padding:3px;"><?php echo $snapshot['metrics']['percent_locked']; ?>%</td>
+                                    <td class="metrics-value"><?php echo $snapshot['metrics']['translation_key_count']; ?></td>
+                                    <td class="metrics-value"><?php echo $snapshot['metrics']['source_count']; ?></td>
+                                    <td class="metrics-value"><?php echo $progress['total']['languages']; ?></td>
+                                    <td class="metrics-value">
+                                        <?php echo $progress['total']['translated']; ?>%
+                                    </td>
+                                    <td class="metrics-value last">
+                                        <?php echo $progress['total']['approved']; ?>%
+                                    </td>
                                 </tr>
                             </table>
+                            <hr>
+                            <?php
+                            foreach ($snapshot['application']['languages'] as $language) {
+                                if ($language['locale'] == $snapshot['application']['default_locale'])
+                                    continue;
+                                ?>
+                                <div style="padding: 3px;">
+                                    <table style="width: 100%">
+                                        <tr>
+                                            <td style="width: 25px; vertical-align: top;">
+                                                <img src='<?php echo $language['flag_url']; ?>'>
+                                            </td>
+                                            <td style="width: 100px; vertical-align: top;">
+                                                <?php echo $language['english_name']; ?>
+                                                <div
+                                                    style="color: #888; font-size: 11px;"><?php echo $language['native_name']; ?></div>
+                                            </td>
+                                            <td style="vertical-align: top; padding-top: 6px;">
+                                                <div class="progress-wrap progress">
+                                                    <div class="progress-bar progress translated"
+                                                         style="width: <?php echo $progress[$language['locale']]['translated'] ?>%"></div>
+                                                    <div class="progress-bar progress approved"
+                                                         style="width: <?php echo $progress[$language['locale']]['approved'] ?>%"></div>
+                                                </div>
+                                                <div
+                                                    style="color: #888; font-size: 11px; padding-top: 5px; text-align: center;">
+                                                    <strong><?php echo $progress[$language['locale']]['approved'] ?>%</strong> Completed &nbsp; |
+                                                    &nbsp;
+                                                    <strong><?php echo 100 - $progress[$language['locale']]['translated'] ?>%</strong>
+                                                    Untranslated &nbsp; | &nbsp;
+                                                    <strong><?php echo 100 - $progress[$language['locale']]['approved'] ?>%</strong> Pending
+                                                    Approval &nbsp;
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align: top; width: 60px; text-align: right; font-weight: bold;">
+                                                <?php echo $progress[$language['locale']]['translated'] ?>%
+                                            </td>
+                                        </tr>
+                                        <?php if (end($snapshot['application']['languages']) != $language) { ?>
+                                            <tr>
+                                                <td colspan="5" style="height: 1px; border-bottom: 1px solid #ccc"></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </table>
+                                </div>
+                            <?php } ?>
                             <!-- ?php var_dump($snapshot['metrics']) ? -->
                         </div>
                     </div>
@@ -240,7 +425,7 @@ use tml\Cache;
         <div>
             <div style="padding-left:140px; padding-top:20px;padding-bottom:40px;">
                 <button class="button" onClick="return downloadSnapshot();">
-                    <?php echo __('Download Current Release') ?>
+                    <?php echo __('Download Latest Release') ?>
                 </button>
 
                 <?php if (get_option("tml_mode") == "client") { ?>
@@ -255,6 +440,20 @@ use tml\Cache;
 
 
 <script>
+    function toggleSnapshot(version) {
+//        alert(jQuery('snapshot-' + version + '-arrow'));
+        var arrow = jQuery('#snapshot-' + version + '-arrow');
+        if (arrow.attr('class') == 'arrow-right') {
+            arrow.removeClass('arrow-right');
+            arrow.addClass('arrow-down');
+            jQuery('#snapshot-' + version + '-details').show();
+        } else {
+            arrow.removeClass('arrow-down');
+            arrow.addClass('arrow-right');
+            jQuery('#snapshot-' + version + '-details').hide();
+        }
+    }
+
     function editDynamicCache() {
         document.getElementById("tml_cache_adapter").disabled = false;
         document.getElementById("tml_cache_host").disabled = false;
@@ -293,8 +492,8 @@ use tml\Cache;
             return false;
 
         var cache = window.localStorage;
-        for (var key in cache){
-            if(key.match(/^tml_/)) cache.removeItem(key);
+        for (var key in cache) {
+            if (key.match(/^tml_/)) cache.removeItem(key);
         }
         window.location.reload();
         return false;
