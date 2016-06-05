@@ -53,6 +53,8 @@ use tml\Cache;
         <input type="hidden" name="adapter" id="cache_adapter" value="">
         <input type="hidden" name="host" id="cache_host" value="">
         <input type="hidden" name="port" id="cache_port" value="">
+        <input type="hidden" name="namespace" id="cache_namespace" value="">
+        <input type="hidden" name="version_check_interval" id="cache_version_check_interval" value="">
         <input type="hidden" name="version" id="cache_version" value="">
 
         <div style="display: inline-block; padding:10px; vertical-align: top;">

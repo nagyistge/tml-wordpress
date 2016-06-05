@@ -59,6 +59,12 @@ if (isset($_POST['action']) && $_POST['action'] == 'use_cache') {
     if (isset($_POST['port']) && $_POST['port'] !== '')
         update_option("tml_cache_port", $_POST['port']);
 
+    if (isset($_POST['namespace']) && $_POST['namespace'] !== '')
+        update_option("tml_cache_namespace", $_POST['namespace']);
+
+    if (isset($_POST['version_check_interval']) && $_POST['version_check_interval'] !== '')
+        update_option("tml_cache_version_check_interval", $_POST['version_check_interval']);
+
     if (isset($_POST['version']) && $_POST['version'] !== '')
         update_option("tml_cache_version", $_POST['version']);
 }

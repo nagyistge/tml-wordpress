@@ -124,7 +124,7 @@
                             </span>
                         <?php } ?>
 
-                        <a class="button" href='https://dashboard.translationexchange.com'>
+                        <a class="button" href='https://dashboard.translationexchange.com/#/projects/<?php echo get_option('tml_key') ?>' target="_new">
                             <?php echo __('Visit Dashboard') ?>
                         </a>
 

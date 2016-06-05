@@ -66,10 +66,12 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
 
     if (get_option('tml_cache_type') == 'dynamic') {
         $tml_cache = array(
-            "enabled"   => true,
-            "adapter"   => get_option('tml_cache_adapter'),
-            "host"      => get_option('tml_cache_host'),
-            "port"      => get_option('tml_cache_port')
+            "enabled"                   => true,
+            "adapter"                   => get_option('tml_cache_adapter'),
+            "host"                      => get_option('tml_cache_host'),
+            "port"                      => get_option('tml_cache_port'),
+            "namespace"                 => get_option('tml_cache_namespace'),
+            "version_check_interval"    => get_option('tml_cache_version_check_interval')
         );
     } elseif (get_option('tml_cache_type') == 'local') {
         $tml_cache = array(
@@ -101,11 +103,11 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
         "agent" => array(
             "host" => $agent_host
         ),
-        "log"       => array(
-            "enabled"   => false,
-            "severity"  => "debug",
-            "path"      => plugin_dir_path(__FILE__) . "/log/tml.log"
-        ),
+//        "log"       => array(
+//            "enabled"   => false,
+//            "severity"  => "debug",
+//            "path"      => plugin_dir_path(__FILE__) . "/log/tml.log"
+//        ),
         "cache" => $tml_cache
     ));
 }

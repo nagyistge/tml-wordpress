@@ -120,6 +120,21 @@
             </tr>
             <tr>
                 <td style="width: 80px;padding-left:5px;">
+                    <?php echo __("Namespace:") ?>
+                </td>
+                <td style="">
+                    <input type="text" id="tml_cache_namespace" disabled value="<?php echo(get_option("tml_cache_namespace", "wordpress")) ?>"
+                           placeholder="11211" style="width:620px">
+                </td>
+                <td style="padding-left: 10px;">
+                    <div class="help">
+                        ?
+                        <div class="tooltip">Namespace for translations within the shared cache.</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 80px;padding-left:5px;">
                     <?php echo __("Refresh Interval:") ?>
                 </td>
                 <td style="">

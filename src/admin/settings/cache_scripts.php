@@ -51,6 +51,7 @@
         document.getElementById("tml_cache_adapter").disabled = false;
         document.getElementById("tml_cache_host").disabled = false;
         document.getElementById("tml_cache_port").disabled = false;
+        document.getElementById("tml_cache_namespace").disabled = false;
         document.getElementById("tml_cache_version_check_interval").disabled = false;
 
         document.getElementById("tml_edit_dynamic_cache_button").style.display = 'none';
@@ -67,7 +68,8 @@
         jQuery("#cache_adapter").val(select.options[select.selectedIndex].value);
         jQuery("#cache_host").val(document.getElementById("tml_cache_host").value);
         jQuery("#cache_port").val(document.getElementById("tml_cache_port").value);
-        jQuery("#version_check_interval").val(document.getElementById("tml_cache_version_check_interval").value);
+        jQuery("#cache_namespace").val(document.getElementById("tml_cache_namespace").value);
+        jQuery("#cache_version_check_interval").val(document.getElementById("tml_cache_version_check_interval").value);
         document.getElementById("cache_form").submit();
     }
 
@@ -75,6 +77,7 @@
         document.getElementById("tml_cache_adapter").disabled = true;
         document.getElementById("tml_cache_host").disabled = true;
         document.getElementById("tml_cache_port").disabled = true;
+        document.getElementById("tml_cache_namespace").disabled = true;
         document.getElementById("tml_cache_version_check_interval").disabled = true;
 
         document.getElementById("tml_edit_dynamic_cache_button").style.display = 'inline';
