@@ -85,13 +85,22 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
         );
     }
 
-    $service_host = get_option('tml_host');
-    if (empty($service_host)) $service_host = 'https://api.translationexchange.com';
+    $api_host = get_option('tml_host');
+    if (empty($api_host)) $api_host = 'https://api.translationexchange.com';
+
+    $cdn_host = get_option('tml_cdn_host');
+    if (empty($cdn_host)) $cdn_host = 'https://cdn.translationexchange.com';
+
+    $agent_host = get_option('tml_agent_host');
+    if (empty($agent_host)) $agent_host = 'https://tools.translationexchange.com/agent/stable/agent.min.js';
 
     tml_init(array(
         "key"       => get_option('tml_key'),
-        "token"     => get_option('tml_token'),
-        "host"      => $service_host,
+        "host"      => $api_host,
+        "cdn_host"  => $cdn_host,
+        "agent" => array(
+            "host" => $agent_host
+        ),
         "log"       => array(
             "enabled"   => false,
             "severity"  => "debug",
@@ -105,7 +114,7 @@ if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "s
  * Report to WordPress Debug that we are ready
  */
 if (Session::instance()->isActive()) {
-    apply_filters('debug', 'Tml Initialized');
+    apply_filters('debug', 'Tml PHP Initialized');
 }
 
 /**
@@ -183,10 +192,10 @@ function tml_prepare_tokens_and_options($args) {
  * @return array
  */
 function tml_tranlsate_html($label, $description = "", $tokens = array(), $options = array()) {
-    if (get_option('tml_script_options') != null && get_option('tml_script_options') != "") {
-        $opts = json_decode(stripcslashes(get_option('tml_script_options')), true);
-        $options = array_merge_recursive($options, $opts);
-//        var_dump($options);
+    $opts = stripcslashes(get_option('tml_script_options', ''));
+    if ($opts !== "") {
+        $opts = json_decode($opts, true);
+        if ($opts !== null) $options = array_merge_recursive($options, $opts);
     }
 
 //    return $label;

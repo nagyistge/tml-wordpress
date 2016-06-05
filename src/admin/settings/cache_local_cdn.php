@@ -32,25 +32,29 @@
 
 ?>
 
-<div id="tml-translation-center-loading" style="text-align:center; padding-top: 100px; font-size: 20px;">
-    <img src="<?php echo plugins_url( 'translationexchange/assets/images/logo.png' ) ?>" style="width: 120px; margin: 20px;">
-    <br>
-    Initializing Dashboard....
+<div style="border: 1px solid #ccc; width: 840px; margin-bottom: 10px;">
+    <div style="background:#fefefe; padding: 5px; ">
+        <div style="float:right; color:#888;">
+            <?php if (get_option("tml_cache_type") == "none") {
+                echo "<strong>" . __("current") . "</strong>";
+            } else { ?>
+                <a href="#" onclick="useCache('none', '0')"
+                   style="text-decoration: none"><?php echo __("use") ?></a>
+            <?php } ?>
+
+            <div class="help" style="display: inline-block; margin-left: 10px;">
+                ?
+                <div class="tooltip">
+                    When user visits your WordPress pages, the translation cache will be loaded directly from Translation Exchange CDN and
+                    stored in the user's browser for better performance.
+                </div>
+            </div>
+        </div>
+
+        <?php if (get_option("tml_cache_version") == "0")
+            echo "<strong>" . __("Translation Exchange CDN") . "</strong>";
+        else
+            echo __("Translation Exchange CDN");
+        ?>
+    </div>
 </div>
-
-<iframe id="tml-translation-center" src="http://localhost:3001"
-        style="display:none; margin-left:-20px; width: calc(100% + 20px); height: 400px;"
-        onload="showTranslationCenter()"></iframe>
-
-<script>
-    function showTranslationCenter() {
-        jQuery("#tml-translation-center-loading").hide();
-        jQuery("#tml-translation-center").show();
-    }
-
-    function resizeIframe() {
-        jQuery("#tml-translation-center").css('height',window.innerHeight - 100);
-    }
-    resizeIframe();
-    jQuery(window).on('resize',resizeIframe )
-</script>

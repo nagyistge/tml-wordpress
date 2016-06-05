@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (c) 2015 Translation Exchange, Inc
+  Copyright (c) 2016 Translation Exchange, Inc
 
    _______                  _       _   _             ______          _
   |__   __|                | |     | | (_)           |  ____|        | |
@@ -30,8 +30,100 @@
     http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-use Tml\Config;
+use Tml\Session;
 
+
+/**
+ * The client side option
+ */
+function tml_enqueue_client_script()
+{
+    $tml_script_host = get_option("tml_script_host");
+    if (empty($tml_script_host)) $tml_script_host = "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js";
+
+    $cache_interval = 86400;
+    $t = time();
+    $t = $t - ($t % $cache_interval);
+    $tml_script_host = $tml_script_host . '?ts=' . $t;
+
+    wp_register_script('tml_js', $tml_script_host, false, null, false);
+    wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_client.js', __FILE__), false, null, false);
+    wp_enqueue_script('tml_js');
+    wp_enqueue_script('tml_init');
+
+    $tml_host = get_option('tml_host');
+    if (empty($tml_host)) $tml_host = "https://api.translationexchange.com";
+
+    $options = array(
+        "host" => $tml_host,
+        "key" => get_option('tml_key'),
+        "token" => get_option('tml_token'),
+        "advanced" => get_option('tml_script_options')
+    );
+
+    if (get_option("tml_cache_type") == "local" && get_option("tml_cache_version") != '0') {
+        $options['cache'] = array(
+            "path" => plugins_url("translation-exchange/cache"),
+            "version" => get_option('tml_cache_version')
+        );
+    }
+
+    wp_localize_script('tml_init', 'TmlConfig', $options);
+}
+
+/**
+ * The server side option
+ */
+function tml_enqueue_server_script()
+{
+    wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_server.js', __FILE__), false, null, true);
+    wp_enqueue_script('tml_init');
+
+    $agent_host = get_option('tml_agent_host');
+    if (empty($agent_host)) $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
+
+    $options = array(
+        "key" => get_option('tml_key'),
+        "agent" => array(
+            "host" => $agent_host
+        )
+    );
+
+    $agent_options = get_option('tml_agent_options');
+    if (!empty($agent_options)) {
+        $result = json_decode(stripslashes($agent_options), true);
+
+        if (json_last_error() == JSON_ERROR_NONE) {
+            $options['agent'] = array_merge($options['agent'], $result);
+        }
+    }
+
+    $cache_interval = 86400;
+    if (isset($options['agent']['cache']))
+        $cache_interval = $options['agent']['cache'];
+    if (isset($options['agent']['host']))
+        $agent_host = $options['agent']['host'];
+
+    $t = time();
+    $t = $t - ($t % $cache_interval);
+    $options['agent']['host'] = $agent_host . '?ts=' . $t;
+    $options['agent']['languages'] = array();
+    $options['agent']['locale'] = tml_current_locale();
+    $options['agent']['css'] = tml_application()->css;
+    $options['agent']['sdk'] = "tml-php v" . Tml\Version::VERSION;
+    $options['agent']['source'] = tml_current_source();
+
+    foreach (Session::application()->languages as $lang) {
+        array_push($options['agent']['languages'], array(
+            "locale" => $lang->locale,
+            "english_name" => $lang->english_name,
+            "native_name" => $lang->native_name,
+            "flag_url" => $lang->flag_url
+        ));
+    }
+
+    wp_localize_script('tml_init', 'TmlConfig', $options);
+}
 
 /**
  * Mechanism for injecting JavaScript
@@ -39,85 +131,9 @@ use Tml\Config;
 function tml_enqueue_scripts()
 {
     if (get_option('tml_mode') == "client") {
-        $tml_script_host = get_option("tml_script_host");
-        if (empty($tml_script_host)) $tml_script_host = "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js";
-
-        $cache_interval = 86400;
-        $t = time();
-        $t = $t - ($t % $cache_interval);
-        $tml_script_host = $tml_script_host . '?ts=' . $t;
-
-        wp_register_script('tml_js', $tml_script_host, false, null, false);
-        wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_client.js', __FILE__), false, null, false);
-        wp_enqueue_script('tml_js');
-        wp_enqueue_script('tml_init');
-
-        $tml_host = get_option('tml_host');
-        if (empty($tml_host)) $tml_host = "https://api.translationexchange.com";
-
-        $options = array(
-            "host" => $tml_host,
-            "key" => get_option('tml_key'),
-            "token" => get_option('tml_token'),
-            "advanced" => get_option('tml_script_options')
-        );
-
-        if (get_option("tml_cache_type") == "local" && get_option("tml_cache_version") != '0') {
-            $options['cache'] = array(
-                "path" => plugins_url("translation-exchange/cache"),
-                "version" => get_option('tml_cache_version')
-            );
-        }
-
-        wp_localize_script('tml_init', 'TmlConfig', $options);
+        tml_enqueue_client_script();
     } else {
-        wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_server.js', __FILE__), false, null, true);
-        wp_enqueue_script('tml_init');
-
-        $agent_host = get_option('tml_agent_host');
-        if (empty($agent_host)) $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
-
-        $options = array(
-            "key" => get_option('tml_key'),
-            "agent" => array(
-                "type" => 'agent',
-                "host" => $agent_host
-            )
-        );
-
-        $agent_options = get_option('tml_agent_options');
-        if (!empty($agent_options)) {
-            $result = json_decode(stripslashes($agent_options), true);
-
-            if (json_last_error() == JSON_ERROR_NONE) {
-                $options['agent'] = array_merge($options['agent'], $result);
-            }
-        }
-
-        $cache_interval = 86400;
-        if (isset($options['agent']['cache']))
-            $cache_interval = $options['agent']['cache'];
-        if (isset($options['agent']['host']))
-            $agent_host = $options['agent']['host'];
-
-        $t = time();
-        $t = $t - ($t % $cache_interval);
-        $options['agent']['host'] = $agent_host . '?ts=' . $t;
-
-        $options = array_merge($options, array(
-                "tools" => array(
-                    "javascript" => tml_application()->tools["javascript"],
-                    "stylesheet" => tml_application()->tools["stylesheet"],
-                    "css" => tml_application()->css,
-                    "host" => tml_application()->tools["host"],
-                    "default_locale" => tml_application()->default_locale,
-                    "locale" => Config::instance()->current_language->locale,
-                    "shortcuts" => (tml_application()->isFeatureEnabled("shortcuts") ? tml_application()->shortcuts : null)
-                )
-            )
-        );
-
-        wp_localize_script('tml_init', 'TmlConfig', $options);
+        tml_enqueue_server_script();
     }
 }
 

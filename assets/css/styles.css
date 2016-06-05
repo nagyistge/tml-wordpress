@@ -1,0 +1,161 @@
+.progress {
+    width: 100%;
+    height: 8px;
+    border-radius: 3px;
+}
+
+.progress-wrap {
+    background: #ddd;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    background: #f80;
+    left: 0;
+    position: absolute;
+    top: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.progress-bar.approved {
+    background: #0FCE89;
+}
+
+.progress-bar.translated {
+    background: #11f59b;
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #888;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+.arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #888;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 7px;
+}
+
+.metrics-title {
+    border-right: 1px solid #ccc;
+    padding: 3px;
+    width: 20%;
+    color: #888;
+    text-align: center;
+}
+
+.metrics-title.last {
+    border-right: 0px;
+}
+
+.metrics-value {
+    border-right: 1px solid #ccc;
+    padding: 3px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.metrics-value.last {
+    border-right: 0px;
+}
+
+.help {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    width: 18px;
+    height: 18px;
+    text-align:center;
+    background: #eee;
+    color: #888;
+    font-size: 11px;
+    cursor: pointer;
+    -webkit-transform: translateZ(0); /* webkit flicker fix */
+    -webkit-font-smoothing: antialiased; /* webkit text rendering fix */
+}
+
+.help .tooltip {
+    text-align: left;
+    background: #eee;
+    bottom: 100%;
+    color: #888;
+    display: block;
+    left: -160px;
+    margin-bottom: 15px;
+    opacity: 0;
+    padding: 20px;
+    pointer-events: none;
+    position: absolute;
+    width: 300px;
+    -webkit-transform: translateY(10px);
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -o-transform: translateY(10px);
+    transform: translateY(10px);
+    -webkit-transition: all .25s ease-out;
+    -moz-transition: all .25s ease-out;
+    -ms-transition: all .25s ease-out;
+    -o-transition: all .25s ease-out;
+    transition: all .25s ease-out;
+    -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+    -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+    -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+    -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+
+/* This bridges the gap so you can mouse into the tooltip without it disappearing */
+.help .tooltip:before {
+    bottom: -20px;
+    content: " ";
+    display: block;
+    height: 20px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+
+/* CSS Triangles - see Trevor's post */
+.help .tooltip:after {
+    border-left: solid transparent 10px;
+    border-right: solid transparent 10px;
+    border-top: solid #ccc 10px;
+    bottom: -10px;
+    content: " ";
+    height: 0;
+    left: 50%;
+    margin-left: -13px;
+    position: absolute;
+    width: 0;
+}
+
+.help:hover .tooltip {
+    opacity: 1;
+    pointer-events: auto;
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    -ms-transform: translateY(0px);
+    -o-transform: translateY(0px);
+    transform: translateY(0px);
+}
+
+/* IE can just show/hide with no transition */
+.lte8 .help .tooltip {
+    display: none;
+}
+
+.lte8 .help:hover .tooltip {
+    display: block;
+}

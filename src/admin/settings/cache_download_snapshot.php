@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (c) 2015 Translation Exchange, Inc
+  Copyright (c) 2016 Translation Exchange, Inc
 
    _______                  _       _   _             ______          _
   |__   __|                | |     | | (_)           |  ____|        | |

@@ -1,7 +1,7 @@
 <?php
 
 /*
-  Copyright (c) 2015 Translation Exchange, Inc
+  Copyright (c) 2016 Translation Exchange, Inc
 
    _______                  _       _   _             ______          _
   |__   __|                | |     | | (_)           |  ____|        | |
@@ -32,6 +32,9 @@
 
 ?>
 
+<link rel='stylesheet' href='<?php echo plugin_dir_url(__FILE__) . "../../../assets/css/styles.css" ?>' type='text/css'
+      media='all'/>
+
 <div class="wrap">
     <h2>
         <img src="<?php echo plugin_dir_url(__FILE__) . "../../../assets/images/logo.png" ?>"
@@ -42,7 +45,7 @@
     <hr/>
 
     <p style="padding-left:10px; color:#888;">
-        To get your project key, please visit your <a href="https://dashboard.translationexchange.com">Translation
+        To get your project key, please visit your <a href="https://dashboard.translationexchange.com" target="_new" style="text-decoration: none">Translation
             Exchange Dashboard</a> and choose <strong>Integration Section</strong> from the navigation menu.
     </p>
 
@@ -61,21 +64,29 @@
                         <div style="display:inline-block; padding:2px 15px;">
                             <?php if ($type == 'text') { ?>
                                 <input type="text" name="<?php echo($key) ?>" value="<?php echo($field["value"]) ?>"
-                                       placeholder="<?php echo($field["default"]) ?>" style="width:700px">
+                                       placeholder="<?php echo($field["default"]) ?>" style="width:640px">
                             <?php } elseif ($type == 'textarea') { ?>
-                                <textarea style="width:700px; height: 200px;" name="<?php echo($key) ?>"
+                                <textarea style="width:643px; height: 200px;" name="<?php echo($key) ?>"
                                           placeholder="<?php echo($field["default"]) ?>"><?php echo(stripcslashes($field["value"])) ?></textarea>
                             <?php } elseif ($type == 'radio' && isset($field["options"])) { ?>
                                 <?php foreach ($field["options"] as $option) { ?>
                                     <input type="radio" name="<?php echo($key) ?>"
                                            value="<?php echo($option["value"]) ?>" <?php if ($field["value"] == $option["value"]) echo("checked"); ?> >
                                     <?php echo($option["title"]) ?>
-                                    &nbsp;&nbsp;
+
+                                    <?php if (isset($option['help'])) { ?>
+                                        <div class="help" style="display: inline-block; margin-left: 10px;">
+                                            ?
+                                            <div class="tooltip">
+                                                <?php echo $option['help'] ?>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php } ?>
                             <?php } elseif ($type == 'checkbox') { ?>
-                                <?php
-                                $value = $field["value"];
-                                ?>
+                                <?php  $value = $field["value"]; ?>
                                 <input type="checkbox" name="<?php echo($key) ?>"
                                        value="true" <?php if ($value == "true") echo("checked"); ?> >
                                 <?php if (isset($field['notes'])) { ?>
@@ -83,20 +94,33 @@
                                 <?php } ?>
                             <?php } ?>
                         </div>
+
+                        <?php if (isset($field['help'])) { ?>
+                            <div class="help" style="display: inline-block; margin-left: 10px; vertical-align: top; margin-top: 8px;">
+                                ?
+                                <div class="tooltip">
+                                    <?php echo $field['help'] ?>
+                                </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 <?php } ?>
             <?php } ?>
+
+
             <hr/>
             <div style="padding-left: 150px; padding-top:10px;padding-bottom:40px;">
                 <div style="width:700px;">
                     <div style="float:right;">
                         <?php if (get_option("tml_mode") == "client") { ?>
                             <span style="padding-top:5px;" id="tml_script_options_button">
-                                <a href="#" class="button" onclick="showScriptOptions();"><?php echo __('Show Advanced Options') ?></a>
+                                <a href="#" class="button"
+                                   onclick="showScriptOptions();"><?php echo __('Show Advanced Options') ?></a>
                             </span>
                         <?php } else { ?>
                             <span style="padding-top:5px;" id="tml_agent_options_button">
-                                <a href="#" class="button" onclick="showAgentOptions();"><?php echo __('Show Advanced Options') ?></a>
+                                <a href="#" class="button"
+                                   onclick="showAgentOptions();"><?php echo __('Show Advanced Options') ?></a>
                             </span>
                         <?php } ?>
 
@@ -122,7 +146,9 @@
         <?php include_once dirname(__FILE__) . "/cache.php" ?>
 
         <div style="color: #888">
-            <?php echo __("Don't forget to configure the <strong>Language Selector widget</strong> under Appearance > Widgets."); ?>
+            <a href="/wp-admin/widgets.php" style="text-decoration: none" target="_new">
+                <?php echo __("Don't forget to configure the <strong>Language Selector widget</strong> under Appearance > Widgets."); ?>
+            </a>
         </div>
 
     <?php } ?>
