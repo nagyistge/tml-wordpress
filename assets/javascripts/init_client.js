@@ -1,8 +1,7 @@
-if (TmlConfig && TmlConfig.key && TmlConfig.token) {
+if (TmlConfig && TmlConfig.key) {
     var options = {
         host:               TmlConfig.host,
         key:                TmlConfig.key,
-        token:              TmlConfig.token,
         translate_title:    true,
         translate_body:     true,
         debug:              false,
