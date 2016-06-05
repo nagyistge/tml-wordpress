@@ -124,13 +124,15 @@
                             </span>
                         <?php } ?>
 
-                        <a class="button" href='https://dashboard.translationexchange.com/#/projects/<?php echo get_option('tml_key') ?>' target="_new">
-                            <?php echo __('Visit Dashboard') ?>
-                        </a>
+                        <?php if (get_option('tml_key') !== null) { ?>
+                            <a class="button" href='https://dashboard.translationexchange.com/#/projects/<?php echo get_option('tml_key') ?>' target="_new">
+                                <?php echo __('Visit Dashboard') ?>
+                            </a>
 
-                        <a class="button" href='https://translate.translationexchange.com'>
-                            <?php echo __('Visit Translation Center') ?>
-                        </a>
+                            <a class="button" href='https://translate.translationexchange.com'>
+                                <?php echo __('Visit Translation Center') ?>
+                            </a>
+                        <?php } ?>
                     </div>
                 </div>
 
