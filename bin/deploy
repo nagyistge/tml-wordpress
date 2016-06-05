@@ -69,8 +69,10 @@ execute("git push")
 
 execute("git checkout master")
 execute("git merge develop")
-execute("git tag '#{version}'")
 execute("git push")
+
+execute("git tag '#{version}'")
+execute("git push --tags")
 
 execute("git checkout develop")
 
