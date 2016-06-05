@@ -143,7 +143,7 @@
         </div>
     </form>
 
-    <?php if (get_option("tml_key") !== "") { ?>
+    <?php if (get_option("tml_key") != "") { ?>
 
         <?php include_once dirname(__FILE__) . "/cache.php" ?>
 

@@ -41,7 +41,13 @@ function getCdnHost() {
 
 function fetchFromCdn($path, $opts = array()) {
     try {
-        $data = file_get_contents(getCdnHost() . "/" . $path);
+        $curl_handle=curl_init();
+        curl_setopt($curl_handle, CURLOPT_URL, getCdnHost() . "/" . $path);
+        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($curl_handle);
+        curl_close($curl_handle);
+
         if (isset($opts['decode']) && $opts['decode'])
             $data = json_decode($data, true);
     } catch (Exception $e) {

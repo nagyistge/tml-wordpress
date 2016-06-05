@@ -59,6 +59,13 @@ Our documentation is constantly updated with the latest FAQs.
 
 == Changelog ==
 
+= 0.3.18 =
+* Fixed various cache bugs
+
+= 0.3.17 =
+* Improvements to cache UI
+* Added ability to download cache from CDN
+
 = 0.3.7 =
 * Switched to the new agent
 
