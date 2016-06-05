@@ -57,7 +57,6 @@ function tml_enqueue_client_script()
     $options = array(
         "host" => $tml_host,
         "key" => get_option('tml_key'),
-        "token" => get_option('tml_token'),
         "advanced" => get_option('tml_script_options')
     );
 
