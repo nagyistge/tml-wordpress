@@ -57,7 +57,11 @@ function tml_enqueue_client_script()
     $options = array(
         "host" => $tml_host,
         "key" => get_option('tml_key'),
-        "advanced" => get_option('tml_script_options')
+        "advanced" => get_option('tml_script_options'),
+        "locale_strategy" => array(
+            "strategy" => get_option('tml_locale_selector'),
+            "param" => "locale"
+        )
     );
 
     if (get_option("tml_cache_type") == "local" && get_option("tml_cache_version") != '0') {
@@ -80,6 +84,8 @@ function tml_enqueue_server_script()
 
     $agent_host = get_option('tml_agent_host');
     if (empty($agent_host)) $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
+
+    $agent_host = "http://localhost:8282/dist/agent.js";
 
     $options = array(
         "key" => get_option('tml_key'),
@@ -111,6 +117,7 @@ function tml_enqueue_server_script()
     $options['agent']['css'] = tml_application()->css;
     $options['agent']['sdk'] = "tml-php v" . Tml\Version::VERSION;
     $options['agent']['source'] = tml_current_source();
+    $options['agent']['locale_strategy'] = Session::localeOptions();
 
     foreach (Session::application()->languages as $lang) {
         array_push($options['agent']['languages'], array(
@@ -148,33 +155,6 @@ function tml_settings()
     include('admin/settings/index.php');
 }
 
-function tml_help()
-{
-    if (!current_user_can('manage_options')) {
-        wp_die(__('You do not have sufficient permissions to access this page.'));
-    }
-
-    include('admin/help/index.php');
-}
-
-function tml_tools()
-{
-    if (!current_user_can('manage_options')) {
-        wp_die(__('You do not have sufficient permissions to access this page.'));
-    }
-
-    include('admin/tools/index.php');
-}
-
-function tml_dashboard()
-{
-    if (!current_user_can('manage_options')) {
-        wp_die(__('You do not have sufficient permissions to access this page.'));
-    }
-
-    include('admin/dashboard/index.php');
-}
-
 /*
  * Admin Settings
  */
@@ -190,24 +170,6 @@ function tml_menu_pages()
 
     $sub_menu_title = __('Settings');
     add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function);
-
-//    $submenu_page_title = __('Dashboard');
-//    $submenu_title = __('Dashboard');
-//    $submenu_slug = 'tml-dashboard';
-//    $submenu_function = 'tml_dashboard';
-//    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
-//
-//    $submenu_page_title = __('Translation Center');
-//    $submenu_title = __('Translation Center');
-//    $submenu_slug = 'tml-tools';
-//    $submenu_function = 'tml_tools';
-//    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
-
-//    $submenu_page_title = __('Tml Help');
-//    $submenu_title = __('Help');
-//    $submenu_slug = 'tml-help';
-//    $submenu_function = 'tml_help';
-//    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
 }
 
 add_action('admin_menu', 'tml_menu_pages');

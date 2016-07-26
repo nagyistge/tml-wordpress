@@ -40,18 +40,25 @@ use Tml\Session;
  * @throws Exception
  */
 function tml_title_filter($title) {
+    $title = do_shortcode($title);
+
     if (is_admin()) return $title;
     if (get_option('tml_mode') == "server_automated") {
+
         if ($title != strip_tags($title)) {
-            return tml_tranlsate_html($title);
+            $title = tml_tranlsate_html($title);
+        } else {
+            $title = tr($title);
         }
-        return tr($title);
+
+        return $title;
     }
 
-    return do_shortcode($title);
+    return $title;
 }
-add_filter('the_title', 'tml_title_filter', 10, 2);
 add_filter('wp_title', 'tml_title_filter', 10, 2);
+add_filter('the_title', 'tml_title_filter', 10, 2);
+add_filter('category_description', 'tml_title_filter', 0);
 
 // function tml_wp_title_filter($title, $id) {
 //     return do_shortcode($title);
@@ -71,6 +78,8 @@ function tml_the_content_filter($content) {
             return $content;
 
         $content = "<div data-tml-source='" . addslashes($GLOBALS['post']->post_name) . "'>" . $content ."</div>";
+
+        $content = do_shortcode($content);
 
 //        if ($GLOBALS['post']->post_name == 'debug') {
 //            return var_export($GLOBALS['post'], TRUE );
@@ -152,11 +161,51 @@ function tml_translate_fields_filter( $translated_text, $text, $domain ) {
     }
 
     if (get_option('tml_mode') == "server_automated") {
-        foreach(array('%s', 'http://', '%1', '%2', '%3', '%4', '&#', '%d', '&gt;') as $token) {
-            if (strpos($text, $token) !== FALSE) return $translated_text;
-        }
+//        foreach(array('%s', 'http://', '%1', '%2', '%3', '%4', '&#', '%d', '&gt;') as $token) {
+//            if (strpos($text, $token) !== FALSE) return $translated_text;
+//        }
         return trl($text, null, array(), array("source" => "wordpress"));
     }
     return $translated_text;
 }
 add_filter( 'gettext', 'tml_translate_fields_filter', 20, 3 );
+//add_filter( 'gettext_with_context', 'tml_translate_fields_filter',0);
+//add_filter( 'ngettext', 'tml_translate_fields_filter',0);
+
+
+function tml_home_url($url, $path, $orig_scheme, $blog_id)
+{
+    global $url_helper;
+    return $url_helper->toHomeUrl($path);
+}
+add_filter('home_url', 'tml_home_url', 0, 4);
+
+
+//function tml_bloginfo_url($url, $path = nil, $orig_scheme = nil, $blog_id = nil)
+//{
+//    tml_log("blog info url: " . $url);
+//    return $url;
+//}
+//add_filter('bloginfo_url', 'tml_bloginfo_url',10,2);
+
+//function tml_link_url($url)
+//{
+//    tml_log("author info url: " . $url);
+//    return $url;
+//}
+//add_filter('author_feed_link', 'tml_link_url');
+//add_filter('author_link', 'tml_link_url');
+//add_filter('day_link', 'tml_link_url');
+//add_filter('get_comment_author_url_link', 'tml_link_url');
+//add_filter('month_link', 'tml_link_url');
+//add_filter('page_link', 'tml_link_url');
+//add_filter('post_link', 'tml_link_url');
+//add_filter('year_link', 'tml_link_url');
+//add_filter('category_feed_link', 'tml_link_url');
+//add_filter('category_link', 'tml_link_url');
+//add_filter('tag_link', 'tml_link_url');
+//add_filter('term_link', 'tml_link_url');
+//add_filter('the_permalink', 'tml_link_url');
+//add_filter('feed_link', 'tml_link_url');
+//add_filter('post_comments_feed_link', 'tml_link_url');
+//add_filter('tag_feed_link', 'tml_link_url');

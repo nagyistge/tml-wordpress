@@ -39,10 +39,7 @@
     http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-define( 'WP_DEBUG', true );
-define( 'WP_DEBUG_LOG', true );
-
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (!defined('ABSPATH')) exit;
 
 add_option('tml_mode', 'client');
 
@@ -52,72 +49,90 @@ add_option('tml_cache_version', '0');
 add_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 update_option('tml_cache_path', plugin_dir_path(__FILE__) . "cache");
 
-require_once(dirname(__FILE__).'/src/tml/src/init.php');
+require_once(dirname(__FILE__) . '/src/tml/src/init.php');
+require_once(dirname(__FILE__) . '/src/helpers/url_helper.php');
+require_once(dirname(__FILE__) . '/src/helpers/debug.php');
 
 use Tml\Session;
 use Tml\utils\ArrayUtils;
 use Tml\utils\StringUtils;
 
-/**
- * Prepare cacheadapter for both client and server
- */
-if (get_option('tml_mode') == "server_automated" || get_option('tml_mode') == "server_manual") {
-    $tml_cache = null;
+function tml_init_plugin()
+{
+    global $url_helper;
+    $url_helper = new UrlHelper();
 
-    if (get_option('tml_cache_type') == 'dynamic') {
-        $tml_cache = array(
-            "enabled"                   => true,
-            "adapter"                   => get_option('tml_cache_adapter'),
-            "host"                      => get_option('tml_cache_host'),
-            "port"                      => get_option('tml_cache_port'),
-            "namespace"                 => get_option('tml_cache_namespace'),
-            "version_check_interval"    => get_option('tml_cache_version_check_interval')
-        );
-    } elseif (get_option('tml_cache_type') == 'local') {
-        $tml_cache = array(
-            "enabled"   => true,
-            "adapter"   => "file",
-            "path"      => get_option('tml_cache_path'),
-            "version"   => get_option('tml_cache_version', 1)
-        );
-    } else {
-        $tml_cache = array(
-            "enabled"   => false,
-            "adapter"   => "file"
-        );
+    if (get_option('tml_mode') == "server_automated") {
+        $tml_cache = null;
+
+        if (get_option('tml_cache_type') == 'dynamic') {
+            $tml_cache = array(
+                "enabled" => true,
+                "adapter" => get_option('tml_cache_adapter'),
+                "host" => get_option('tml_cache_host'),
+                "port" => get_option('tml_cache_port'),
+                "namespace" => get_option('tml_cache_namespace'),
+                "version_check_interval" => get_option('tml_cache_version_check_interval')
+            );
+        } elseif (get_option('tml_cache_type') == 'local') {
+            $tml_cache = array(
+                "enabled" => true,
+                "adapter" => "file",
+                "path" => get_option('tml_cache_path'),
+                "version" => get_option('tml_cache_version', 1)
+            );
+        } else {
+            $tml_cache = array(
+                "enabled" => false,
+                "adapter" => "file"
+            );
+        }
+
+        $api_host = get_option('tml_host');
+        if (empty($api_host)) $api_host = 'https://api.translationexchange.com';
+
+        $cdn_host = get_option('tml_cdn_host');
+        if (empty($cdn_host)) $cdn_host = 'https://cdn.translationexchange.com';
+
+        $agent_host = get_option('tml_agent_host');
+        if (empty($agent_host)) $agent_host = 'https://tools.translationexchange.com/agent/stable/agent.min.js';
+
+        tml_init(array(
+            "key" => get_option('tml_key'),
+            "host" => $api_host,
+            "cdn_host" => $cdn_host,
+            "source" => $url_helper->toSource(),
+            "agent" => array(
+                "host" => $agent_host
+            ),
+            "locale" => array(
+                "strategy" => get_option('tml_locale_selector'),
+                "param" => "locale",
+                "redirect" => true,
+                "ignore_urls" => '/wp-admin/',
+                "skip_default" => false,
+                "cookie" => true
+            ),
+            "log" => array(
+                "enabled"   => false,
+                "severity"  => "debug",
+                "path"      => "./tml.log"
+            ),
+            "cache" => $tml_cache
+        ));
+
+        $url_helper->locale = tml_current_locale();
+
+        /**
+         * Report to WordPress Debug that we are ready
+         */
+        if (Session::instance()->isActive()) {
+            apply_filters('debug', 'Tml PHP Initialized');
+        }
+
     }
-
-    $api_host = get_option('tml_host');
-    if (empty($api_host)) $api_host = 'https://api.translationexchange.com';
-
-    $cdn_host = get_option('tml_cdn_host');
-    if (empty($cdn_host)) $cdn_host = 'https://cdn.translationexchange.com';
-
-    $agent_host = get_option('tml_agent_host');
-    if (empty($agent_host)) $agent_host = 'https://tools.translationexchange.com/agent/stable/agent.min.js';
-
-    tml_init(array(
-        "key"       => get_option('tml_key'),
-        "host"      => $api_host,
-        "cdn_host"  => $cdn_host,
-        "agent" => array(
-            "host" => $agent_host
-        ),
-//        "log"       => array(
-//            "enabled"   => false,
-//            "severity"  => "debug",
-//            "path"      => plugin_dir_path(__FILE__) . "/log/tml.log"
-//        ),
-        "cache" => $tml_cache
-    ));
 }
-
-/**
- * Report to WordPress Debug that we are ready
- */
-if (Session::instance()->isActive()) {
-    apply_filters('debug', 'Tml PHP Initialized');
-}
+add_action('plugins_loaded', 'tml_init_plugin', 2);
 
 /**
  * For shortcodes, extracts the tokens and options from the token information
@@ -125,7 +140,8 @@ if (Session::instance()->isActive()) {
  * @param $args
  * @return array
  */
-function tml_prepare_tokens_and_options($args) {
+function tml_prepare_tokens_and_options($args)
+{
     $tokens = array();
     $options = array();
 
@@ -147,7 +163,7 @@ function tml_prepare_tokens_and_options($args) {
         $options = json_decode($args['options'], true);
     }
 
-    foreach($args as $key => $value) {
+    foreach ($args as $key => $value) {
         // echo($key . " = " . $value . "<br>");
 
         if (StringUtils::startsWith('option:', $value)) {
@@ -159,7 +175,7 @@ function tml_prepare_tokens_and_options($args) {
                 $options[$parts[0]] = $value;
             } else {
                 if (!isset($options[$parts[0]])) $options[$parts[0]] = array();
-                ArrayUtils::createAttribute($options[$parts[0]], array_slice($parts,1), $value);
+                ArrayUtils::createAttribute($options[$parts[0]], array_slice($parts, 1), $value);
             }
         } else if (StringUtils::startsWith('token:', $value)) {
             $parts = explode('=', substr($value, 6));
@@ -170,7 +186,7 @@ function tml_prepare_tokens_and_options($args) {
                 $tokens[$parts[0]] = $value;
             } else {
                 if (!isset($tokens[$parts[0]])) $tokens[$parts[0]] = array();
-                ArrayUtils::createAttribute($tokens[$parts[0]], array_slice($parts,1), $value);
+                ArrayUtils::createAttribute($tokens[$parts[0]], array_slice($parts, 1), $value);
             }
         } else {
             $tokens[$key] = $value;
@@ -193,7 +209,8 @@ function tml_prepare_tokens_and_options($args) {
  * @param $options
  * @return array
  */
-function tml_tranlsate_html($label, $description = "", $tokens = array(), $options = array()) {
+function tml_tranlsate_html($label, $description = "", $tokens = array(), $options = array())
+{
     $opts = stripcslashes(get_option('tml_script_options', ''));
     if ($opts !== "") {
         $opts = json_decode($opts, true);
@@ -204,8 +221,8 @@ function tml_tranlsate_html($label, $description = "", $tokens = array(), $optio
     return trh($label, $description, $tokens, $options);
 }
 
-include plugin_dir_path(__FILE__)."/src/shortcodes.php";
-include plugin_dir_path(__FILE__)."/src/filters.php";
-include plugin_dir_path(__FILE__)."/src/actions.php";
-include plugin_dir_path(__FILE__)."/src/widgets.php";
+include plugin_dir_path(__FILE__) . "/src/shortcodes.php";
+include plugin_dir_path(__FILE__) . "/src/filters.php";
+include plugin_dir_path(__FILE__) . "/src/actions.php";
+include plugin_dir_path(__FILE__) . "/src/widgets.php";
 
