@@ -55,7 +55,7 @@ puts "Deploying WordPress plugin version #{version}..."
 
 execute("mv cache cache_backup")
 execute("mkdir cache")
-execute("zip -r dist/translation-exchange-#{version}.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE")
+execute("zip -r dist/translation-exchange-#{version}.zip translationexchange.php readme.txt assets cache src/*.php src/admin src/helpers src/widgets src/tml/config src/tml/src src/tml/MIT-LICENSE")
 execute("rmdir cache")
 execute("mv cache_backup cache")
 
