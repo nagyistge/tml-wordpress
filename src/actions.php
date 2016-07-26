@@ -85,8 +85,6 @@ function tml_enqueue_server_script()
     $agent_host = get_option('tml_agent_host');
     if (empty($agent_host)) $agent_host = "https://tools.translationexchange.com/agent/stable/agent.min.js";
 
-    $agent_host = "http://localhost:8282/dist/agent.js";
-
     $options = array(
         "key" => get_option('tml_key'),
         "agent" => array(
