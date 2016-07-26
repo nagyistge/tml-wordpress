@@ -34,17 +34,13 @@ use tml\Session;
 
 class LanguageSelectorWidget extends WP_Widget
 {
-    function LanguageSelectorWidget()
-    {
+
+    function __construct() {
         $widget_ops = array(
             'classname' => 'LanguageSelectorWidget',
             'description' => 'Displays current language and allows you to change languages.'
         );
-        $this->WP_Widget(
-            'LanguageSelectorWidget',
-            '   Language Selector',
-            $widget_ops
-        );
+        parent::__construct('LanguageSelectorWidget', '   Language Selector', $widget_ops);
     }
 
     public function form($instance)
