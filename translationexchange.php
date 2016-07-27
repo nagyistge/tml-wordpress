@@ -4,7 +4,7 @@
   Plugin URI: http://wordpress.org/plugins/translationexchange/
   Description: Translate your Wordpress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.3.26
+  Version: 0.3.27
   Author URI: https://translationexchange.com/
   License: GPLv2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  */
@@ -109,7 +109,7 @@ function tml_init_plugin()
                 "strategy" => get_option('tml_locale_selector'),
                 "param" => "locale",
                 "redirect" => true,
-                "ignore_urls" => '/wp-admin/',
+                "ignore_urls" => '/wp-/',
                 "skip_default" => false,
                 "cookie" => true
             ),
