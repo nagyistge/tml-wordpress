@@ -51,6 +51,8 @@ if ($post_action == 'sync_cache') {
     $version_path = get_option('tml_cache_path') . "/" . $_POST['version'];
     FileUtils::rrmdir($version_path);
 
+    include dirname(__FILE__) . "/form.php";
+
 } elseif ($post_action == 'use_cache') {
 
     update_option("tml_cache_type", $_POST['type']);
@@ -72,6 +74,8 @@ if ($post_action == 'sync_cache') {
 
     if (isset($_POST['version']) && $_POST['version'] !== '')
         update_option("tml_cache_version", $_POST['version']);
+
+    include dirname(__FILE__) . "/form.php";
 
 } elseif ($post_action == 'download_cache') {
 
