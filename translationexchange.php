@@ -109,7 +109,7 @@ function tml_init_plugin()
                 "strategy" => get_option('tml_locale_selector'),
                 "param" => "locale",
                 "redirect" => true,
-                "ignore_urls" => '/wp-admin/',
+                "ignore_urls" => '/wp-/',
                 "skip_default" => false,
                 "cookie" => true
             ),
