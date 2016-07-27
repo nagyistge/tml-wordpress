@@ -77,7 +77,7 @@ function tml_the_content_filter($content) {
         if (strstr($content, 'tml:manual') !== false)
             return $content;
 
-        $content = "<div data-tml-source='" . addslashes($GLOBALS['post']->post_name) . "'>" . $content ."</div>";
+//        $content = "<div data-tml-source='" . addslashes($GLOBALS['post']->post_name) . "'>" . $content ."</div>";
 
         $content = do_shortcode($content);
 
