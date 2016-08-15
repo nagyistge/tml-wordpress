@@ -58,7 +58,7 @@ function tml_enqueue_client_script()
         "host" => $tml_host,
         "key" => get_option('tml_key'),
         "advanced" => get_option('tml_script_options'),
-        "locale_strategy" => array(
+        "locale" => array(
             "strategy" => get_option('tml_locale_selector'),
             "param" => "locale"
         )
