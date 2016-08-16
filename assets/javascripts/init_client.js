@@ -5,6 +5,7 @@ if (TmlConfig && TmlConfig.key) {
         translate_title:    true,
         translate_body:     true,
         debug:              false,
+        locale:             TmlConfig.locale,
         translator_options: {
             ignore_elements: ['#wpadminbar', '.sd-content', '.blog-post-meta']
         }
