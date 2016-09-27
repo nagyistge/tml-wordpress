@@ -171,7 +171,7 @@ include dirname(__FILE__) . "/configuration.php";
 
     <?php if (get_option("tml_key") !== '') { ?>
 
-        <?php include_once dirname(__FILE__) . "/cache/settings.php" ?>
+        <?php include_once dirname(__FILE__) . "/cache_options/settings.php" ?>
 
         <div style="color: #888">
             <a href="/wp-admin/widgets.php" style="text-decoration: none" target="_new">
