@@ -59,6 +59,18 @@ Our documentation is constantly updated with the latest FAQs.
 
 == Changelog ==
 
+= 0.3.31 =
+* Fixed issues with double slash in pre-path mode.
+
+= 0.3.30 =
+* Fixed issues with the server side shared cache
+
+= 0.3.29 =
+* Added support for pre-path, pre-domain options for better SEO
+
+= 0.3.19 =
+* Upgraded to the latest PHP SDK
+
 = 0.3.18 =
 * Fixed various cache bugs
 
