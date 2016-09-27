@@ -53,10 +53,14 @@ require_once(dirname(__FILE__) . '/src/tml/src/init.php');
 require_once(dirname(__FILE__) . '/src/helpers/url_helper.php');
 require_once(dirname(__FILE__) . '/src/helpers/debug.php');
 
+use Tml\Logger;
 use Tml\Session;
 use Tml\utils\ArrayUtils;
 use Tml\utils\StringUtils;
 
+/**
+ *
+ */
 function tml_init_plugin()
 {
     global $url_helper;
@@ -64,8 +68,75 @@ function tml_init_plugin()
 
     if (get_option('tml_mode') == "server_automated") {
         $tml_cache = null;
+        $cache_type = get_option('tml_cache_type');
 
-        if (get_option('tml_cache_type') == 'dynamic') {
+        // Make sure that selected adapters actually exist and are activated
+        if ($cache_type == 'dynamic') {
+            if (get_option('tml_cache_adapter') == 'memcached') {
+                if (!class_exists('Memcached')) {
+                    Logger::instance()->error("Memcached server is selected, but Memcached extension is not installed");
+                    $cache_type = null;
+                } else {
+                    try {
+                        $memcached = new \Memcached();
+                        $memcached->addServer(
+                            get_option('tml_cache_host'),
+                            get_option('tml_cache_port')
+                        );
+                        $status = $memcached->getStats();
+                        $key = get_option('tml_cache_host').':'.get_option('tml_cache_port');
+                        if (!isset($status[$key]) || $status[$key]['uptime'] == 0) {
+                            Logger::instance()->error("Memcached connection information is invalid.");
+                            $cache_type = null;
+                        }
+                    } catch (Exception $e) {
+                        Logger::instance()->error("Memcached connection information is invalid");
+                        $cache_type = null;
+                    }
+                }
+            }
+            else if (get_option('tml_cache_adapter') == 'memcache') {
+                if (!class_exists('Memcache')) {
+                    Logger::instance()->error("Redis server is selected, but Redis extension is not installed");
+                    $cache_type = null;
+                } else {
+                    try {
+                        $memcache = new \Memcache();
+                        $memcache->addServer(
+                            get_option('tml_cache_host'),
+                            get_option('tml_cache_port')
+                        );
+                        $status = $memcache->getStats();
+                        if (!$status) {
+                            Logger::instance()->error("Memcache connection information is invalid");
+                            $cache_type = null;
+                        }
+                    } catch (Exception $e) {
+                        Logger::instance()->error("Memcache connection information is invalid");
+                        $cache_type = null;
+                    }
+                }
+            } else if (get_option('tml_cache_adapter') == 'redis') {
+                if (!class_exists('Redis')) {
+                    Logger::instance()->error("Redis server is selected, but Redis extension is not installed");
+                    $cache_type = null;
+                } else {
+                    try {
+                        $redis = new \Redis();
+                        $redis->connect(
+                            get_option('tml_cache_host'),
+                            get_option('tml_cache_port')
+                        );
+                        $redis->get('test');
+                    } catch (Exception $e) {
+                        Logger::instance()->error("Redis connection information is invalid");
+                        $cache_type = null;
+                    }
+                }
+            }
+        }
+
+        if ($cache_type == 'dynamic') {
             $tml_cache = array(
                 "enabled" => true,
                 "adapter" => get_option('tml_cache_adapter'),
@@ -74,7 +145,7 @@ function tml_init_plugin()
                 "namespace" => get_option('tml_cache_namespace'),
                 "version_check_interval" => get_option('tml_cache_version_check_interval')
             );
-        } elseif (get_option('tml_cache_type') == 'local') {
+        } elseif ($cache_type == 'local') {
             $tml_cache = array(
                 "enabled" => true,
                 "adapter" => "file",

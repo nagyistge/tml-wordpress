@@ -79,7 +79,7 @@ if ($post_action == 'sync_cache') {
 
 } elseif ($post_action == 'download_cache') {
 
-    include dirname(__FILE__) . "/cache/download_snapshot.php";
+    include dirname(__FILE__) . "/cache_options/download_snapshot.php";
 
 } else { // snapshot generation end
 
