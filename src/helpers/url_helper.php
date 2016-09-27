@@ -59,18 +59,21 @@ class UrlHelper
         if (0 !== strpos($path, '/'))
             $path = '/' . $path;
 
-        if ($this->isPrePath())
-            return $this->scheme . '://' .  $this->host . '/' . $this->locale . $path;
+        $url = $this->scheme . '://' . $this->host . $path;
 
-        if ($this->isPreDomain())
-            return $this->scheme . '://' .  $this->locale . '.' . $this->host . $path;
+        if ($this->locale && $this->locale !== '') {
+            if ($this->isPrePath())
+                $url = $this->scheme . '://' .  $this->host . '/' . $this->locale . $path;
+            else if ($this->isPreDomain())
+                $url =  $this->scheme . '://' .  $this->locale . '.' . $this->host . $path;
+        }
 
 //        $param = '?';
 //        if (strpos($path, '?') !== false)
 //            $param = '&';
 //        $param = $param . 'locale=' . $this->locale;
 
-        return $this->scheme . '://' . $this->host . $path;
+        return $url;
     }
 
     public function toSource() {

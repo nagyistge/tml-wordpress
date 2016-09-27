@@ -3,7 +3,7 @@ Contributors: translationx
 Tags: translationexchange, translation exchange, translation, exchange, tml, localization, localize, localisation, localise, translate,  translator, translations, l10n, i18n, tr8n, language, switch, select, selector, change, switcher
 Requires at least: 3.0
 Tested up to: 4.5.2
-Stable tag: 0.3.30
+Stable tag: 0.3.31
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -58,6 +58,18 @@ Our documentation is constantly updated with the latest FAQs.
 1. In-Context Translator
 
 == Changelog ==
+
+= 0.3.31 =
+* Fixed issues with double slash in pre-path mode.
+
+= 0.3.30 =
+* Fixed issues with the server side shared cache
+
+= 0.3.29 =
+* Added support for pre-path, pre-domain options for better SEO
+
+= 0.3.19 =
+* Upgraded to the latest PHP SDK
 
 = 0.3.18 =
 * Fixed various cache bugs
