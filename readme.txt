@@ -3,7 +3,7 @@ Contributors: translationx
 Tags: translationexchange, translation exchange, translation, exchange, tml, localization, localize, localisation, localise, translate,  translator, translations, l10n, i18n, tr8n, language, switch, select, selector, change, switcher
 Requires at least: 3.0
 Tested up to: 4.5.2
-Stable tag: 0.3.31
+Stable tag: 0.3.32
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -44,6 +44,10 @@ Our documentation is constantly updated with the latest FAQs.
 [Click here](https://translationexchange.com/docs/plugins/wordpress) to view the documentation.
 
 == Upgrade Notice ==
+
+= 0.3.2 =
+* Fixed compatibility with WP Security plugin for masking login URL
+* Fixed widget options for enabling/disabling inline mode
 
 = 0.3.1 =
 * Please update your settings to include application key and token.

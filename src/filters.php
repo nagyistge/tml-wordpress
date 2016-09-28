@@ -46,7 +46,7 @@ function tml_title_filter($title) {
     if (get_option('tml_mode') == "server_automated") {
 
         if ($title != strip_tags($title)) {
-            $title = tml_tranlsate_html($title);
+            $title = tml_translate_html($title);
         } else {
             $title = tr($title);
         }
@@ -85,7 +85,7 @@ function tml_the_content_filter($content) {
 //            return var_export($GLOBALS['post'], TRUE );
 //        }
 
-        return tml_tranlsate_html($content);
+        return tml_translate_html($content);
     }
     // Logger::instance()->debug($content);
     return $content;
@@ -125,7 +125,7 @@ function tml_comment_text_filter($content) {
     if (is_admin()) return $content;
 
     if (get_option('tml_mode') == "server_automated") {
-        return tml_tranlsate_html($content);
+        return tml_translate_html($content);
     }
 //    \Tml\Logger::instance()->debug($content);
     return $content;
@@ -176,7 +176,7 @@ add_filter( 'gettext', 'tml_translate_fields_filter', 20, 3 );
 function tml_home_url($url, $path, $orig_scheme, $blog_id)
 {
     global $url_helper;
-    return $url_helper->toHomeUrl($path);
+    return $url_helper->toHomeUrl($url, $path, $orig_scheme, $blog_id);
 }
 add_filter('home_url', 'tml_home_url', 0, 4);
 

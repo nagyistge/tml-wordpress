@@ -77,7 +77,7 @@ add_shortcode('tml:tr', 'tml_shortcode_tr', 2);
  */
 function tml_shortcode_trh($attrs, $content = null) {
     $attrs = tml_prepare_tokens_and_options($attrs);
-    return tml_tranlsate_html($content, $attrs["description"], $attrs["tokens"], $attrs["options"]);
+    return tml_translate_html($content, $attrs["description"], $attrs["tokens"], $attrs["options"]);
 }
 add_shortcode('tml:trh', 'tml_shortcode_trh', 2);
 
