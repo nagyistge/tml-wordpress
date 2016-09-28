@@ -45,6 +45,10 @@ Our documentation is constantly updated with the latest FAQs.
 
 == Upgrade Notice ==
 
+= 0.3.2 =
+* Fixed compatibility with WP Security plugin for masking login URL
+* Fixed widget options for enabling/disabling inline mode
+
 = 0.3.1 =
 * Please update your settings to include application key and token.
 
