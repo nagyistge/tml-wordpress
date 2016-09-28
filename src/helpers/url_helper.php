@@ -18,12 +18,18 @@ class UrlHelper
         if ($this->isPrePath()) {
             if ($this->path !== '') {
                 $elements = StringUtils::split($this->path, '/');
-                $this->locale = array_shift($elements);
+
+                if ($this->isValidLocale($elements[0]))
+                    $this->locale = array_shift($elements);
+
                 $this->path = '/' . StringUtils::join($elements, '/');
             }
         } elseif ($this->isPreDomain()) {
             $elements = StringUtils::split($this->host, '.');
-            $this->locale = array_shift($elements);
+
+            if ($this->isValidLocale($elements[0]))
+                $this->locale = array_shift($elements);
+
             $this->host = StringUtils::join($elements, '.');
         } elseif ($this->isParamBased()) {
             if (isset($this->params['locale']))
@@ -33,6 +39,10 @@ class UrlHelper
         }
         parse_str($this->query, $this->params);
 //        tml_log($this->to_array());
+    }
+
+    public function isValidLocale($locale) {
+        return preg_match('/^[a-z]{2}(-[A-Z]{2,3})?$/', $locale);
     }
 
     public function isPreDomain() {
@@ -55,15 +65,21 @@ class UrlHelper
         return get_option('tml_locale_url_' . $locale);
     }
 
-    public function toHomeUrl($path) {
+    public function toHomeUrl($original_url, $path, $orig_scheme, $blog_id) {
         if (0 !== strpos($path, '/'))
             $path = '/' . $path;
 
-        $url = $this->scheme . '://' . $this->host . $path;
+        $url_host = '';
+
+        // if original URL is a full url, so should be our response, otherwise we will just give back the path
+        if (preg_match('/^http/', $original_url))
+            $url_host = $this->scheme . '://' . $this->host;
+
+        $url = $url_host . $path;
 
         if ($this->locale && $this->locale !== '') {
             if ($this->isPrePath())
-                $url = $this->scheme . '://' .  $this->host . '/' . $this->locale . $path;
+                $url = $url_host . '/' . $this->locale . $path;
             else if ($this->isPreDomain())
                 $url =  $this->scheme . '://' .  $this->locale . '.' . $this->host . $path;
         }

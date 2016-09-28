@@ -280,7 +280,7 @@ function tml_prepare_tokens_and_options($args)
  * @param $options
  * @return array
  */
-function tml_tranlsate_html($label, $description = "", $tokens = array(), $options = array())
+function tml_translate_html($label, $description = "", $tokens = array(), $options = array())
 {
     $opts = stripcslashes(get_option('tml_script_options', ''));
     if ($opts !== "") {
