@@ -40,10 +40,12 @@ Translate your WordPress into any number of languages with minimal amount of eff
 
 == Frequently Asked Questions ==
 
-Our documentation is constantly updated with the latest FAQs. 
-[Click here](https://translationexchange.com/docs/plugins/wordpress) to view the documentation.
+[Click here](http://docs.translationexchange.com/wordpress/) to view our documentation.
 
 == Upgrade Notice ==
+
+= 0.3.35 =
+* Fixed compatibility issues with the previous versions of PHP
 
 = 0.3.2 =
 * Fixed compatibility with WP Security plugin for masking login URL
