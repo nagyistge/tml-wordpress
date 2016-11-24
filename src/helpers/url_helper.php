@@ -11,7 +11,7 @@ class UrlHelper
         $this->scheme = is_ssl() ? 'https' : 'http';
         $this->host = $_SERVER['HTTP_HOST'];
         $this->query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
-        $this->params = [];
+        $this->params = array();
         parse_str($this->query, $this->params);
         $this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
 
