@@ -31,7 +31,7 @@
 */
 
 try {
-    $current_release_version = fetchFromCdn(get_option('tml_key') . "/version.json", ['decode' => true]);
+    $current_release_version = fetchFromCdn(get_option('tml_key') . "/version.json", array('decode' => true));
 } catch (Exception $ex) {
     $current_release_version = null;
 }

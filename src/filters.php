@@ -153,33 +153,59 @@ add_filter('plugin_action_links', 'tml_plugin_action_links_filter', 10, 2);
  *
  * @link http://codex.wordpress.org/Plugin_API/Filter_Reference/gettext
  */
-function tml_translate_fields_filter( $translated_text, $text, $domain ) {
-    if (is_admin()) return $translated_text;
-
-    if (!Session::instance()->isActive()) {
+function tml_gettext_filter( $translated_text, $text, $domain ) {
+    if (is_admin() || (get_option('tml_mode') !== "server_automated") || !Session::instance()->isActive()) {
         return $translated_text;
     }
 
-    if (get_option('tml_mode') == "server_automated") {
-//        foreach(array('%s', 'http://', '%1', '%2', '%3', '%4', '&#', '%d', '&gt;') as $token) {
-//            if (strpos($text, $token) !== FALSE) return $translated_text;
-//        }
-        return trl($text, null, array(), array("source" => "wordpress"));
-    }
-    return $translated_text;
+    $source = 'wordpress';
+    if ($domain) $source = $source . '/' . $domain;
+
+    return trl($text, null, array(), array("source" => $source));
 }
-add_filter( 'gettext', 'tml_translate_fields_filter', 20, 3 );
+add_filter( 'gettext', 'tml_gettext_filter', 20, 3 );
 //add_filter( 'gettext_with_context', 'tml_translate_fields_filter',0);
 //add_filter( 'ngettext', 'tml_translate_fields_filter',0);
 
-
-function tml_home_url($url, $path, $orig_scheme, $blog_id)
+/**
+ * @param $url
+ * @param $path
+ * @param $orig_scheme
+ * @param $blog_id
+ * @return mixed
+ */
+function tml_home_url_filter($url, $path, $orig_scheme, $blog_id)
 {
     global $url_helper;
-    return $url_helper->toHomeUrl($url, $path, $orig_scheme, $blog_id);
+    $destination = $url_helper->toHomeUrl($url, $path, $orig_scheme, $blog_id);
+//    error_log($destination);
+    return $destination;
 }
-add_filter('home_url', 'tml_home_url', 0, 4);
+add_filter('home_url', 'tml_home_url_filter', 0, 4);
 
+/**
+ * @param $location
+ * @return mixed
+ */
+function tml_comment_post_redirect_filter( $location ) {
+    $referrer = null;
+    if ( isset( $_SERVER["HTTP_REFERER"] ) ){
+        $referrer = $_SERVER["HTTP_REFERER"];
+    }
+
+    if ($referrer === null)
+        return $location;
+
+    $parts = explode('#', $location);
+
+    if (count($parts) > 1)
+        $location = $referrer . '#' . $parts[1];
+    else
+        $location = $referrer;
+
+    return $location;
+}
+add_filter( 'comment_post_redirect', 'tml_comment_post_redirect_filter' );
 
 //function tml_bloginfo_url($url, $path = nil, $orig_scheme = nil, $blog_id = nil)
 //{

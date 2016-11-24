@@ -76,7 +76,7 @@ include dirname(__FILE__) . "/configuration.php";
                     $style = (!isset($field['style']) ? '' : $field['style']);
                     ?>
 
-                    <tr style="<?= $style ?>" id="<?= $key ?>">
+                    <tr style="<?php echo $style ?>" id="<?php echo $key ?>">
                         <td style="padding-left: 10px; width: 150px; vertical-align: top;">
                             <?php echo($field["title"]) ?>
                         </td>
@@ -86,25 +86,25 @@ include dirname(__FILE__) . "/configuration.php";
 
                             if ($type == 'text') {
 
-                                text_field_tag($key, $field["value"], [
+                                text_field_tag($key, $field["value"], array(
                                     'placeholder' => $field["default"],
                                     'style' => "width:100%;"
-                                ]);
+                                ));
 
                             } elseif ($type == 'textarea') {
 
-                                text_area_tag($key, stripcslashes($field["value"]), [
+                                text_area_tag($key, stripcslashes($field["value"]), array(
                                     'placeholder' => $field["default"],
                                     'style' => "width:100%; height: 200px;"
-                                ]);
+                                ));
 
                             } elseif ($type == 'radio' && isset($field["options"])) {
                                 foreach ($field["options"] as $option) {
-                                    radio_button_tag($key, $option["value"], [
+                                    radio_button_tag($key, $option["value"], array(
                                         'checked' => ($field["value"] == $option["value"]),
                                         'disabled' => (isset($option["disabled"]) && $option["disabled"]),
                                         'label' => $option["title"]
-                                    ]);
+                                    ));
 
                                     if (isset($option['help'])) {
                                         help_tag($option['help']);

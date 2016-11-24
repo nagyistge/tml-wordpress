@@ -4,7 +4,7 @@
   Plugin URI: http://wordpress.org/plugins/translationexchange/
   Description: Translate your Wordpress site into any language in minutes.
   Author: Translation Exchange, Inc
-  Version: 0.3.38
+  Version: 0.3.39
   Author URI: https://translationexchange.com/
   License: GPLv2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
  */
@@ -168,7 +168,7 @@ function tml_init_plugin()
         $agent_host = get_option('tml_agent_host');
         if (empty($agent_host)) $agent_host = 'https://tools.translationexchange.com/agent/stable/agent.min.js';
 
-        tml_init(array(
+        $options = array(
             "key" => get_option('tml_key'),
             "host" => $api_host,
             "cdn_host" => $cdn_host,
@@ -182,22 +182,34 @@ function tml_init_plugin()
                 "redirect" => true,
                 "ignore_urls" => '/wp-/',
                 "skip_default" => false,
-                "cookie" => true
+                "cookie" => true,
+                "prefix" => parse_url(get_site_url(), PHP_URL_PATH)
             ),
             "log" => array(
-                "enabled"   => false,
+                "enabled"   => (defined('WP_DEBUG') && true === WP_DEBUG),
                 "severity"  => "debug",
                 "path"      => "./tml.log"
             ),
             "cache" => $tml_cache
-        ));
+        );
 
-        $url_helper->locale = tml_current_locale();
+        tml_log($options);
+
+        try {
+            tml_init($options);
+        } catch (\Tml\TmlException $ex) {
+            Session::instance()->application = null;
+            tml_log("Failed to initialize application with error: " . $ex->getMessage());
+        }
+
+//        error_log( $url_helper->locale );
 
         /**
          * Report to WordPress Debug that we are ready
          */
         if (Session::instance()->isActive()) {
+            $url_helper->locale = tml_current_locale();
+
             apply_filters('debug', 'Tml PHP Initialized');
         }
 

@@ -141,8 +141,8 @@ class LanguageSelectorWidget extends WP_Widget
                     <?php } else { ?>
                     <div data-tml-language-selector='<?php echo $style; ?>'
                         <?php } ?>
-                            data-tml-powered-by='<?= ($powered_by_flag === 'true' ? 'true' : 'false'); ?>'
-                            data-tml-toggle='<?= ($toggle_flag === 'true' ? 'true' : 'false'); ?>'
+                            data-tml-powered-by='<?php echo ($powered_by_flag === 'true' ? 'true' : 'false'); ?>'
+                            data-tml-toggle='<?php echo ($toggle_flag === 'true' ? 'true' : 'false'); ?>'
                             data-tml-toggle-label='<?php echo $toggle_label; ?>'
                         ></div>
                 </div>

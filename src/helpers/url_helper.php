@@ -4,7 +4,7 @@ use Tml\Utils\StringUtils;
 
 class UrlHelper
 {
-    public $method, $scheme, $host, $path, $query, $params;
+    public $method, $scheme, $host, $path, $query, $params, $locale;
 
     function __construct() {
         $this->method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
@@ -14,17 +14,23 @@ class UrlHelper
         $this->params = array();
         parse_str($this->query, $this->params);
 
+        $site_default_path = parse_url(get_site_url(), PHP_URL_PATH);
+
         $this->path = explode('?', $_SERVER['REQUEST_URI']);
         if (is_array($this->path))
             $this->path = $this->path[0];
         else
             $this->path = '';
 
+        $expr = '/^' . str_replace('/', '\/', $site_default_path) . '/';
+        // get rid of the default pre-path element
+        $this->path = preg_replace($expr, '', $this->path);
+
         if ($this->isPrePath()) {
             if ($this->path !== '') {
                 $elements = StringUtils::split($this->path, '/');
 
-                if ($this->isValidLocale($elements[0]))
+                if (count($elements) > 0 && $this->isValidLocale($elements[0]))
                     $this->locale = array_shift($elements);
 
                 $this->path = '/' . StringUtils::join($elements, '/');
@@ -43,7 +49,7 @@ class UrlHelper
 
         }
         parse_str($this->query, $this->params);
-//        tml_log($this->to_array());
+        tml_log($this->to_array());
     }
 
     public function isValidLocale($locale) {
@@ -78,7 +84,7 @@ class UrlHelper
 
         // if original URL is a full url, so should be our response, otherwise we will just give back the path
         if (preg_match('/^http/', $original_url))
-            $url_host = $this->scheme . '://' . $this->host;
+            $url_host = get_site_url();
 
         $url = $url_host . $path;
 
@@ -87,13 +93,11 @@ class UrlHelper
                 $url = $url_host . '/' . $this->locale . $path;
             else if ($this->isPreDomain())
                 $url =  $this->scheme . '://' .  $this->locale . '.' . $this->host . $path;
+            else if ($this->isParamBased()) {
+//                $param = (strpos($path, '?') !== false) ? '&' : '?';
+//                $url = $url . $param . 'locale=' . $this->locale;
+            }
         }
-
-//        $param = '?';
-//        if (strpos($path, '?') !== false)
-//            $param = '&';
-//        $param = $param . 'locale=' . $this->locale;
-
         return $url;
     }
 

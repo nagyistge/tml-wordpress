@@ -55,7 +55,9 @@ function tml_enqueue_client_script()
         "advanced" => get_option('tml_script_options'),
         "locale" => array(
             "strategy" => get_option('tml_locale_selector'),
-            "param" => "locale"
+            "param" => "locale",
+            "cookie" => "true",
+            "prefix" => parse_url(get_site_url(), PHP_URL_PATH)
         )
     );
 
