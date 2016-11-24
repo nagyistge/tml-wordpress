@@ -3,7 +3,7 @@ Contributors: translationx
 Tags: translationexchange, translation exchange, translation, exchange, tml, localization, localize, localisation, localise, translate,  translator, translations, l10n, i18n, tr8n, language, switch, select, selector, change, switcher
 Requires at least: 3.0
 Tested up to: 4.6.1
-Stable tag: 0.3.34
+Stable tag: 0.3.35
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -40,10 +40,12 @@ Translate your WordPress into any number of languages with minimal amount of eff
 
 == Frequently Asked Questions ==
 
-Our documentation is constantly updated with the latest FAQs. 
-[Click here](https://translationexchange.com/docs/plugins/wordpress) to view the documentation.
+[Click here](http://docs.translationexchange.com/wordpress/) to view our documentation.
 
 == Upgrade Notice ==
+
+= 0.3.35 =
+* Fixed compatibility issues with the previous versions of PHP
 
 = 0.3.2 =
 * Fixed compatibility with WP Security plugin for masking login URL
