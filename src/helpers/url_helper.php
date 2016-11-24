@@ -13,7 +13,12 @@ class UrlHelper
         $this->query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
         $this->params = array();
         parse_str($this->query, $this->params);
-        $this->path = explode('?', $_SERVER['REQUEST_URI'])[0];
+
+        $this->path = explode('?', $_SERVER['REQUEST_URI']);
+        if (is_array($this->path))
+            $this->path = $this->path[0];
+        else
+            $this->path = '';
 
         if ($this->isPrePath()) {
             if ($this->path !== '') {
