@@ -41,11 +41,6 @@ function tml_enqueue_client_script()
     $tml_script_host = get_option("tml_script_host");
     if (empty($tml_script_host)) $tml_script_host = "https://cdn.translationexchange.com/tools/tml/stable/tml.min.js";
 
-    $cache_interval = 86400;
-    $t = time();
-    $t = $t - ($t % $cache_interval);
-    $tml_script_host = $tml_script_host . '?ts=' . $t;
-
     wp_register_script('tml_js', $tml_script_host, false, null, false);
     wp_register_script('tml_init', plugins_url('/../assets/javascripts/init_client.js', __FILE__), false, null, false);
     wp_enqueue_script('tml_js');
