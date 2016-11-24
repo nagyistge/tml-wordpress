@@ -7,42 +7,42 @@ function help_tag($text)
     <div class="help" style="display: inline-block; margin-left: 10px;">
         ?
         <div class="tooltip">
-            <?= $text ?>
+            <?php echo $text ?>
         </div>
     </div>
 
     <?php
 }
 
-function text_area_tag($name, $value, $options = [])
+function text_area_tag($name, $value, $options = array())
 {
     ?>
 
     <textarea
-        name="<?= $name ?>"
-        placeholder="<?= isset($options['placeholder']) ? $options['placeholder'] : '' ?>"
-        style="<?= isset($options['style']) ? $options['style'] : '' ?>"
-        ><?= $value ?></textarea>
+        name="<?php echo $name ?>"
+        placeholder="<?php echo isset($options['placeholder']) ? $options['placeholder'] : '' ?>"
+        style="<?php echo isset($options['style']) ? $options['style'] : '' ?>"
+        ><?php echo $value ?></textarea>
 
     <?php
 }
 
-function text_field_tag($name, $value, $options = [])
+function text_field_tag($name, $value, $options = array())
 {
     ?>
 
     <input
         type="text"
-        name="<?= $name ?>"
-        value="<?= $value ?>"
-        placeholder="<?= isset($options['placeholder']) ? $options['placeholder'] : '' ?>"
-        style="<?= isset($options['style']) ? $options['style'] : '' ?>"
+        name="<?php echo $name ?>"
+        value="<?php echo $value ?>"
+        placeholder="<?php echo isset($options['placeholder']) ? $options['placeholder'] : '' ?>"
+        style="<?php echo isset($options['style']) ? $options['style'] : '' ?>"
         >
 
     <?php
 }
 
-function radio_button_tag($name, $value, $options = [])
+function radio_button_tag($name, $value, $options = array())
 {
 
     $disabled = isset($options['disabled']) && $options['disabled'];
@@ -50,34 +50,34 @@ function radio_button_tag($name, $value, $options = [])
     ?>
 
     <?php if (isset($options['label'])) { ?>
-        <label title="<?= $options['label'] ?>">
+        <label title="<?php echo $options['label'] ?>">
     <?php } ?>
 
     <input
         type="radio"
-        name="<?= $name ?>"
-        value="<?= $value ?>"
-        <?= ($checked & !$disabled) ? 'checked' : '' ?>
-        <?= $disabled ? 'disabled' : '' ?>
+        name="<?php echo $name ?>"
+        value="<?php echo $value ?>"
+        <?php echo ($checked & !$disabled) ? 'checked' : '' ?>
+        <?php echo $disabled ? 'disabled' : '' ?>
         >
 
     <?php if (isset($options['label'])) { ?>
-        <?= $options['label'] ?></label>
+        <?php echo $options['label'] ?></label>
     <?php } ?>
 
     <?php
 }
 
-function check_box_tag($name, $value = "true", $options = [])
+function check_box_tag($name, $value = "true", $options = array())
 {
     ?>
 
     <input
         type="checkbox"
-        name="<?= $name ?>"
-        value="<?= $value ?>"
-        <?= isset($options['checked']) && $options['checked'] ? 'checked' : '' ?>
-        <?= isset($options['disabled']) && $options['disabled'] ? 'disabled' : '' ?>
+        name="<?php echo $name ?>"
+        value="<?php echo $value ?>"
+        <?php echo isset($options['checked']) && $options['checked'] ? 'checked' : '' ?>
+        <?php echo isset($options['disabled']) && $options['disabled'] ? 'disabled' : '' ?>
         >
 
     <?php
@@ -87,6 +87,6 @@ function span_tag($text, $style = "")
 {
     ?>
 
-    <span style="<?= $style ?>"><?= $text ?></span>
+    <span style="<?php echo $style ?>"><?php echo $text ?></span>
     <?php
 }

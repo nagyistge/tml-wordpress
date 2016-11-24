@@ -114,7 +114,7 @@
                 <tr>
                     <td></td>
                     <td colspan="2" style="color: red; padding: 10px 0;">
-                        <?= $error ?>
+                        <?php echo $error ?>
                     </td>
                 </tr>
             <?php } ?>

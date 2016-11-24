@@ -7,7 +7,7 @@ if (TmlConfig && TmlConfig.key) {
         debug:              false,
         locale:             TmlConfig.locale,
         translator_options: {
-            ignore_elements: ['#wpadminbar', '.sd-content', '.blog-post-meta']
+            ignore_elements: ['#wpadminbar', '#querylist', '.sd-content', '.blog-post-meta', '.comment-content']
         }
     };
 
