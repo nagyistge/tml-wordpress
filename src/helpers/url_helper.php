@@ -106,14 +106,14 @@ class UrlHelper
     }
 
     public function to_array() {
-        return [
+        return array(
             'method' => $this->method,
             'scheme' => $this->scheme,
             'host' => $this->host,
             'path' => $this->path,
             'query' => $this->query,
             'params' => $this->params,
-            'locale' => $this->locale,
-        ];
+            'locale' => $this->locale
+        );
     }
 }
